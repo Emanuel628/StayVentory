@@ -59,6 +59,9 @@ function RootLayoutNav() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="houses/[id]" />
+      <Stack.Screen name="rooms/[id]" />
+      <Stack.Screen name="cleaners" />
       <Stack.Screen name="+not-found" />
     </Stack>
   );

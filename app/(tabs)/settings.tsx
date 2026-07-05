@@ -1,51 +1,48 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Href, Link } from 'expo-router';
 import { ChevronRight } from 'lucide-react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { Screen } from '@/src/components/Screen';
+import { SectionTitle } from '@/src/components/SectionTitle';
 import { colors, space, type } from '@/src/theme/theme';
 
-const rows = ['Profile', 'House playbook', 'Cleaner access', 'Notifications', 'Design lock'];
+const rows: { label: string; href: Href }[] = [
+  { label: 'Profile', href: '/settings' },
+  { label: 'House playbook', href: '/settings' },
+  { label: 'Cleaner access', href: '/cleaners' },
+  { label: 'Notifications', href: '/settings' },
+  { label: 'Design lock', href: '/settings' },
+];
 
 export default function SettingsScreen() {
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
-      <View style={styles.header}>
-        <Text style={type.eyebrow}>Settings</Text>
-        <Text style={type.screenGreeting}>System controls</Text>
+    <Screen eyebrow="Settings" title="System controls">
+      <View style={styles.section}>
+        <SectionTitle>Account</SectionTitle>
+        {rows.map((row) => (
+          <Link key={row.label} href={row.href} asChild>
+            <Pressable style={styles.settingRow}>
+              <Text style={styles.settingLabel}>{row.label}</Text>
+              <ChevronRight color={colors.inkMuted} size={18} strokeWidth={1.75} />
+            </Pressable>
+          </Link>
+        ))}
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Account</Text>
-        {rows.map((row) => (
-          <View key={row} style={styles.settingRow}>
-            <Text style={styles.settingLabel}>{row}</Text>
-            <ChevronRight color={colors.inkMuted} size={18} strokeWidth={1.75} />
-          </View>
-        ))}
+        <SectionTitle>Cleaner model</SectionTitle>
+        <Text style={styles.helpText}>
+          Owners invite cleaners, limit access by property, and share one-time codes. Cleaners never see unassigned
+          properties.
+        </Text>
       </View>
-    </ScrollView>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.paper,
-  },
-  content: {
-    paddingHorizontal: space.xl,
-    paddingTop: space.lg,
-    paddingBottom: 96,
-    gap: 28,
-  },
-  header: {
-    gap: space.xs,
-  },
   section: {
     gap: space.md,
-  },
-  sectionTitle: {
-    ...type.eyebrow,
-    color: colors.ink,
   },
   settingRow: {
     paddingVertical: space.lg,
@@ -59,5 +56,9 @@ const styles = StyleSheet.create({
   settingLabel: {
     ...type.body,
     color: colors.ink,
+  },
+  helpText: {
+    ...type.noteBody,
+    color: colors.inkBody,
   },
 });
