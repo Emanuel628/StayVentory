@@ -2,7 +2,6 @@ import { ReactNode } from 'react';
 import { Href, Link } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { PalmBackdrop } from '@/src/components/PalmBackdrop';
 import { colors, radius, space, type } from '@/src/theme/theme';
 
 type ActionLink = {
@@ -22,7 +21,6 @@ type AuthShellProps = {
 export function AuthShell({ eyebrow, title, subtitle, children, actions = [] }: AuthShellProps) {
   return (
     <View style={styles.screen}>
-      <PalmBackdrop />
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.content}
