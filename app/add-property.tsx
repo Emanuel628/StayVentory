@@ -13,17 +13,17 @@ export default function AddPropertyScreen() {
         <SectionTitle>Property details</SectionTitle>
         <View style={styles.formField}>
           <Text style={styles.fieldLabel}>Property title</Text>
-          <Text style={styles.fieldValue}>The Linden House</Text>
+          <Text style={styles.fieldPlaceholder}>Enter property title</Text>
         </View>
         <View style={styles.formField}>
           <Text style={styles.fieldLabel}>Address</Text>
-          <Text style={styles.fieldValue}>1132 Linden Ave</Text>
-          <Text style={styles.fieldValue}>Tampa, FL 33602</Text>
-          <Text style={styles.fieldValue}>United States</Text>
+          <Text style={styles.fieldPlaceholder}>Address line 1</Text>
+          <Text style={styles.fieldPlaceholder}>Address line 2</Text>
+          <Text style={styles.fieldPlaceholder}>City, State ZIP</Text>
         </View>
         <View style={styles.formField}>
           <Text style={styles.fieldLabel}>Description (optional)</Text>
-          <Text style={styles.fieldValue}>Three-bedroom short-term rental with a guest-ready supply standard for each room.</Text>
+          <Text style={styles.fieldPlaceholder}>Add a short property note</Text>
         </View>
       </View>
 
@@ -76,6 +76,10 @@ const styles = StyleSheet.create({
   fieldValue: {
     ...type.body,
     color: colors.inkBody,
+  },
+  fieldPlaceholder: {
+    ...type.body,
+    color: colors.inkMuted,
   },
   inlineRow: {
     paddingVertical: space.lg,
