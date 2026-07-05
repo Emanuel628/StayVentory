@@ -9,42 +9,59 @@ import { houses } from '@/src/data/mock';
 import { colors, space, type } from '@/src/theme/theme';
 
 export default function HousesScreen() {
+  const hasHouses = houses.length > 0;
+
   return (
     <Screen eyebrow="Houses" title="Your houses">
-      <View style={styles.section}>
-        <SectionTitle>Empty state</SectionTitle>
-        <View style={styles.emptyState}>
-          <Text style={styles.emptyTitle}>Add your first property</Text>
-          <Link href="/add-property" asChild>
-            <Pressable style={styles.addRow}>
-              <Plus color={colors.teal} size={14} strokeWidth={1.75} />
-              <Text style={styles.addLabel}>Add your first property</Text>
-            </Pressable>
-          </Link>
+      {hasHouses ? (
+        <View style={styles.section}>
+          <View style={styles.sectionHeaderRow}>
+            <SectionTitle>Your houses</SectionTitle>
+            <Link href="/add-property" asChild>
+              <Pressable style={styles.addRow}>
+                <Plus color={colors.teal} size={14} strokeWidth={1.75} />
+                <Text style={styles.addLabel}>Add property</Text>
+              </Pressable>
+            </Link>
+          </View>
+          {houses.map((house) => (
+            <ListRowLink
+              key={house.id}
+              href={{ pathname: '/houses/[id]', params: { id: house.id } }}
+              icon={house.icon}
+              iconBackground={colors.teal}
+              iconColor={colors.tealOnDark}
+              name={house.name}
+              meta={house.meta}
+              status={house.status}
+            />
+          ))}
         </View>
-      </View>
-
-      <View style={styles.section}>
-        <SectionTitle>Your houses</SectionTitle>
-        {houses.map((house) => (
-          <ListRowLink
-            key={house.id}
-            href={{ pathname: '/houses/[id]', params: { id: house.id } }}
-            icon={house.icon}
-            iconBackground={colors.teal}
-            iconColor={colors.tealOnDark}
-            name={house.name}
-            meta={house.meta}
-            status={house.status}
-          />
-        ))}
-      </View>
+      ) : (
+        <View style={styles.section}>
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyTitle}>Add your first property</Text>
+            <Link href="/add-property" asChild>
+              <Pressable style={styles.addRow}>
+                <Plus color={colors.teal} size={14} strokeWidth={1.75} />
+                <Text style={styles.addLabel}>Add your first property</Text>
+              </Pressable>
+            </Link>
+          </View>
+        </View>
+      )}
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
   section: {
+    gap: space.md,
+  },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     gap: space.md,
   },
   emptyState: {
