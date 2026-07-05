@@ -7,7 +7,7 @@ import { AuthField } from '@/src/components/AuthField';
 import { AuthShell } from '@/src/components/AuthShell';
 import { getPasswordStrength } from '@/src/lib/passwordStrength';
 import { formatRetryAfter, getRateLimitState, recordRateLimitHit } from '@/src/services/rateLimit';
-import { signUpWithPassword } from '@/src/services/auth';
+import { emailExistsForSignup, signUpWithPassword } from '@/src/services/auth';
 import { colors, space, type } from '@/src/theme/theme';
 
 export function RegisterScreen() {
@@ -40,6 +40,18 @@ export function RegisterScreen() {
 
       if (!rateLimit.allowed) {
         setError(`Too many account creation attempts. Try again in ${formatRetryAfter(rateLimit.retryAfterMs)}.`);
+        return;
+      }
+
+      const { data: emailExists, error: emailExistsError } = await emailExistsForSignup(normalizedEmail);
+
+      if (emailExistsError) {
+        setError(emailExistsError.message);
+        return;
+      }
+
+      if (emailExists) {
+        setError('An account with this email already exists. Sign in or use a different email.');
         return;
       }
 

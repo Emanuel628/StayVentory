@@ -21,6 +21,11 @@ export async function signInWithPassword(email: string, password: string) {
   return supabase.auth.signInWithPassword({ email, password });
 }
 
+export async function emailExistsForSignup(email: string) {
+  const supabase = requireSupabase() as any;
+  return supabase.rpc('email_exists_for_signup', { target_email: email });
+}
+
 export async function signUpWithPassword(input: {
   email: string;
   password: string;

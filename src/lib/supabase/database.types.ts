@@ -371,6 +371,10 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      email_exists_for_signup: {
+        Args: { target_email: string };
+        Returns: boolean;
+      };
       current_app_role: {
         Args: Record<PropertyKey, never>;
         Returns: Database['public']['Enums']['app_role'] | null;
