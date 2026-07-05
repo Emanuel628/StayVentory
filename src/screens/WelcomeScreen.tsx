@@ -19,7 +19,7 @@ export function WelcomeScreen() {
     <AuthShell
       eyebrow="Welcome"
       title="StayVentory"
-      subtitle="A tropical, room-by-room turnover control app for owners who need every property clean, stocked, and guest-ready."
+      subtitle="Keep every property clean, stocked, and ready for the next guest without losing track of rooms, supplies, or turnover details."
       actions={[
         { label: 'Create owner account', href: '/register', primary: true },
         { label: 'Sign in', href: '/login' },

@@ -10,15 +10,21 @@ type ActionLink = {
   primary?: boolean;
 };
 
+type TextLink = {
+  label: string;
+  href: Href;
+};
+
 type AuthShellProps = {
   eyebrow: string;
   title: string;
   subtitle: string;
   children?: ReactNode;
   actions?: ActionLink[];
+  links?: TextLink[];
 };
 
-export function AuthShell({ eyebrow, title, subtitle, children, actions = [] }: AuthShellProps) {
+export function AuthShell({ eyebrow, title, subtitle, children, actions = [], links = [] }: AuthShellProps) {
   return (
     <View style={styles.screen}>
       <ScrollView
@@ -50,6 +56,17 @@ export function AuthShell({ eyebrow, title, subtitle, children, actions = [] }: 
                       ])}>
                       {action.label}
                     </Text>
+                  </Pressable>
+                </Link>
+              ))}
+            </View>
+          ) : null}
+          {links.length ? (
+            <View style={styles.links}>
+              {links.map((link) => (
+                <Link key={String(link.href)} href={link.href} asChild>
+                  <Pressable style={styles.textLink}>
+                    <Text style={styles.textLinkLabel}>{link.label}</Text>
                   </Pressable>
                 </Link>
               ))}
@@ -102,6 +119,11 @@ const styles = StyleSheet.create({
     gap: space.sm,
     paddingTop: space.sm,
   },
+  links: {
+    gap: space.sm,
+    paddingTop: space.xs,
+    alignItems: 'flex-start',
+  },
   button: {
     minHeight: 46,
     alignItems: 'center',
@@ -125,5 +147,12 @@ const styles = StyleSheet.create({
   },
   secondaryButtonLabel: {
     color: colors.ink,
+  },
+  textLink: {
+    paddingVertical: 2,
+  },
+  textLinkLabel: {
+    ...type.buttonLabel,
+    color: colors.teal,
   },
 });

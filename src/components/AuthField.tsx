@@ -11,7 +11,7 @@ type AuthFieldProps = {
 export function AuthField({ label, value, hint }: AuthFieldProps) {
   return (
     <View style={styles.wrapper}>
-      <Text style={type.eyebrow}>{label}</Text>
+      <Text style={styles.label}>{label}</Text>
       <View style={styles.field}>
         <Text style={styles.value}>{value}</Text>
       </View>
@@ -23,6 +23,10 @@ export function AuthField({ label, value, hint }: AuthFieldProps) {
 const styles = StyleSheet.create({
   wrapper: {
     gap: space.xs,
+  },
+  label: {
+    ...type.eyebrow,
+    color: colors.ink,
   },
   field: {
     minHeight: 46,

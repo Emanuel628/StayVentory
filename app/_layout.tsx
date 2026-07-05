@@ -64,6 +64,7 @@ function RootLayoutNav() {
       <Stack.Screen name="register" />
       <Stack.Screen name="forgot-password" />
       <Stack.Screen name="team-register" />
+      <Stack.Screen name="team-workspace" />
       <Stack.Screen name="houses/[id]" />
       <Stack.Screen name="rooms/[id]" />
       <Stack.Screen name="cleaners" />
