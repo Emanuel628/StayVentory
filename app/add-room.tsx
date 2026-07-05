@@ -1,12 +1,17 @@
-import { Link } from 'expo-router';
+import { Link, useLocalSearchParams } from 'expo-router';
 import { ChevronRight, ImagePlus } from 'lucide-react-native';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
+import { roomOptions } from '@/src/data/roomOptions';
 import { colors, radius, space, type } from '@/src/theme/theme';
 
 export default function AddRoomScreen() {
+  const params = useLocalSearchParams<{ selectedIcon?: string }>();
+  const selectedRoomOption = roomOptions.find((option) => option.id === params.selectedIcon) ?? null;
+  const SelectedIcon = selectedRoomOption?.icon;
+
   return (
     <Screen eyebrow="Room" title="Add room" backHref={{ pathname: '/houses/[id]', params: { id: 'linden-house' } }} backLabel="Back to house">
       <View style={styles.section}>
@@ -29,11 +34,27 @@ export default function AddRoomScreen() {
 
       <View style={styles.section}>
         <SectionTitle>Room icon</SectionTitle>
-        <Link href="/room-icon-picker" asChild>
+        <Link
+          href={{
+            pathname: '/room-icon-picker',
+            params: selectedRoomOption ? { selectedIcon: selectedRoomOption.id } : undefined,
+          }}
+          asChild>
           <Pressable style={styles.inlineRow}>
             <View style={styles.inlineLeft}>
-              <ImagePlus color={colors.teal} size={16} strokeWidth={1.75} />
-              <Text style={styles.inlineText}>Choose room icon</Text>
+              {SelectedIcon ? (
+                <View style={styles.selectedIconTile}>
+                  <SelectedIcon color={colors.tealOnDark} size={18} strokeWidth={1.75} />
+                </View>
+              ) : (
+                <ImagePlus color={colors.teal} size={16} strokeWidth={1.75} />
+              )}
+              <View style={styles.inlineTextWrap}>
+                <Text style={styles.inlineText}>{selectedRoomOption ? selectedRoomOption.label : 'Choose room icon'}</Text>
+                <Text style={styles.inlineMeta}>
+                  {selectedRoomOption ? 'Selected room icon' : 'Pick the icon that matches this room'}
+                </Text>
+              </View>
             </View>
             <ChevronRight color={colors.inkMuted} size={16} strokeWidth={1.75} />
           </Pressable>
@@ -93,9 +114,26 @@ const styles = StyleSheet.create({
     gap: space.sm,
     flex: 1,
   },
+  inlineTextWrap: {
+    gap: 2,
+    flex: 1,
+  },
   inlineText: {
     ...type.body,
     color: colors.ink,
+  },
+  inlineMeta: {
+    ...type.bodySmallMuted,
+    color: colors.inkBody,
+  },
+  selectedIconTile: {
+    width: 34,
+    height: 34,
+    borderRadius: radius.tile,
+    backgroundColor: colors.teal,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
   },
   saveButton: {
     minHeight: 46,

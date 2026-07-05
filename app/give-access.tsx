@@ -1,4 +1,5 @@
 import { KeyRound, Mail, ShieldCheck } from 'lucide-react-native';
+import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Screen } from '@/src/components/Screen';
@@ -6,6 +7,23 @@ import { SectionTitle } from '@/src/components/SectionTitle';
 import { colors, radius, space, type } from '@/src/theme/theme';
 
 export default function GiveAccessScreen() {
+  const [generatedCode, setGeneratedCode] = useState('');
+
+  const handleGenerateCode = () => {
+    const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+    const numbers = Math.floor(1000 + Math.random() * 9000);
+    const prefix =
+      letters[Math.floor(Math.random() * letters.length)] +
+      letters[Math.floor(Math.random() * letters.length)] +
+      letters[Math.floor(Math.random() * letters.length)] +
+      letters[Math.floor(Math.random() * letters.length)];
+    const suffix =
+      letters[Math.floor(Math.random() * letters.length)] +
+      letters[Math.floor(Math.random() * letters.length)];
+
+    setGeneratedCode(`${prefix}-${numbers}-${suffix}`);
+  };
+
   return (
     <Screen eyebrow="Access" title="Give property access" backHref="/cleaners" backLabel="Back to team">
       <View style={styles.section}>
@@ -29,12 +47,16 @@ export default function GiveAccessScreen() {
             <KeyRound color={colors.teal} size={16} strokeWidth={1.75} />
             <Text style={styles.actionLabel}>Generate access code</Text>
           </View>
-          <Text style={styles.actionLink}>Generate</Text>
+          <Pressable style={styles.generateButton} onPress={handleGenerateCode}>
+            <Text style={styles.generateButtonLabel}>Generate</Text>
+          </Pressable>
         </View>
 
         <View style={styles.codeShelf}>
           <Text style={styles.codeLabel}>Generated code</Text>
-          <Text style={styles.codePlaceholder}>A new one-time code will appear here after you generate it.</Text>
+          <Text style={generatedCode ? styles.codeValue : styles.codePlaceholder}>
+            {generatedCode || 'A new one-time code will appear here after you generate it.'}
+          </Text>
         </View>
       </View>
 
@@ -98,9 +120,17 @@ const styles = StyleSheet.create({
     ...type.body,
     color: colors.ink,
   },
-  actionLink: {
+  generateButton: {
+    minHeight: 34,
+    borderRadius: radius.control,
+    backgroundColor: colors.teal,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: space.md,
+  },
+  generateButtonLabel: {
     ...type.buttonLabel,
-    color: colors.teal,
+    color: colors.buttonPrimaryText,
   },
   codeShelf: {
     backgroundColor: colors.paperRaised,
@@ -116,6 +146,11 @@ const styles = StyleSheet.create({
   codePlaceholder: {
     ...type.bodySmallMuted,
     color: colors.inkBody,
+  },
+  codeValue: {
+    ...type.mono,
+    color: colors.teal,
+    fontSize: 14,
   },
   noteBlock: {
     backgroundColor: colors.paperRaised,

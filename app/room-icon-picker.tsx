@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Link, useLocalSearchParams } from 'expo-router';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
@@ -17,6 +18,8 @@ const iconPalettes = [
 ];
 
 export default function RoomIconPickerScreen() {
+  const params = useLocalSearchParams<{ selectedIcon?: string }>();
+
   return (
     <Screen eyebrow="Room icons" title="Choose room icon" backHref="/add-room" backLabel="Back to room">
       <View style={styles.section}>
@@ -28,13 +31,20 @@ export default function RoomIconPickerScreen() {
           {roomOptions.map((option, index) => {
             const Icon = option.icon;
             const palette = iconPalettes[index % iconPalettes.length];
+            const isSelected = params.selectedIcon === option.id;
             return (
-              <View key={option.id} style={styles.optionCard}>
-                <View style={[styles.iconTileWrap, { backgroundColor: palette.tile }]}>
-                  <Icon color={palette.icon} size={iconTile.iconSize} strokeWidth={iconTile.strokeWidth} />
-                </View>
-                <Text style={styles.optionLabel}>{option.label}</Text>
-              </View>
+              <Link
+                key={option.id}
+                href={{ pathname: '/add-room', params: { selectedIcon: option.id } }}
+                asChild>
+                <Pressable style={[styles.optionCard, isSelected ? styles.optionCardSelected : null]}>
+                  <View style={[styles.iconTileWrap, { backgroundColor: palette.tile }]}>
+                    <Icon color={palette.icon} size={iconTile.iconSize} strokeWidth={iconTile.strokeWidth} />
+                  </View>
+                  <Text style={styles.optionLabel}>{option.label}</Text>
+                  <Text style={styles.optionMeta}>{isSelected ? 'Selected' : 'Tap to use this icon'}</Text>
+                </Pressable>
+              </Link>
             );
           })}
         </View>
@@ -65,6 +75,10 @@ const styles = StyleSheet.create({
     padding: space.md,
     gap: space.sm,
   },
+  optionCardSelected: {
+    borderColor: colors.teal,
+    borderWidth: 2,
+  },
   iconTileWrap: {
     width: iconTile.size,
     height: iconTile.size,
@@ -76,5 +90,9 @@ const styles = StyleSheet.create({
   optionLabel: {
     ...type.body,
     color: colors.ink,
+  },
+  optionMeta: {
+    ...type.bodySmallMuted,
+    color: colors.inkBody,
   },
 });

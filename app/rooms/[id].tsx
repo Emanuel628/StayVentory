@@ -101,10 +101,10 @@ export default function RoomDetailScreen() {
               />
             </View>
             <View style={styles.formField}>
-              <Text style={styles.fieldLabel}>Description (optional)</Text>
+              <Text style={styles.fieldLabel}>Item instructions (optional)</Text>
               <TextInput
                 style={[styles.input, styles.multilineInput]}
-                placeholder="Optional item description"
+                placeholder="Add item-specific setup or restock instructions"
                 placeholderTextColor={colors.inkMuted}
                 multiline
                 textAlignVertical="top"
