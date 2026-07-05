@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Href, Link } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { PalmBackdrop } from '@/src/components/PalmBackdrop';
 import { colors, radius, space, type } from '@/src/theme/theme';
@@ -23,7 +23,11 @@ export function AuthShell({ eyebrow, title, subtitle, children, actions = [] }: 
   return (
     <View style={styles.screen}>
       <PalmBackdrop />
-      <View style={styles.content}>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+        bounces>
         <View style={styles.header}>
           <Text style={type.eyebrow}>{eyebrow}</Text>
           <Text style={styles.title}>{title}</Text>
@@ -54,7 +58,7 @@ export function AuthShell({ eyebrow, title, subtitle, children, actions = [] }: 
             </View>
           ) : null}
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -64,12 +68,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.paper,
   },
-  content: {
+  scroll: {
     flex: 1,
+  },
+  content: {
+    flexGrow: 1,
     paddingHorizontal: space.xl,
     paddingTop: 44,
     paddingBottom: 28,
-    justifyContent: 'space-between',
     gap: 28,
   },
   header: {
