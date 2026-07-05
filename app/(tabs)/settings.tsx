@@ -17,19 +17,6 @@ const rows: { label: string; href: Href }[] = [
   { label: 'Design lock', href: '/settings' },
 ];
 
-const previewRows: { label: string; href: Href }[] = [
-  { label: 'Welcome page', href: '/welcome' },
-  { label: 'Owner register', href: '/register' },
-  { label: 'Login', href: '/login' },
-  { label: 'Forgot password', href: '/forgot-password' },
-  { label: 'Property team register', href: '/team-register' },
-  { label: 'Property team workspace', href: '/team-workspace' },
-  { label: 'Add property', href: '/add-property' },
-  { label: 'Add room', href: '/add-room' },
-  { label: 'Room icon picker', href: '/room-icon-picker' },
-  { label: 'Give access', href: '/give-access' },
-];
-
 export default function SettingsScreen() {
   const router = useRouter();
   const { user, role } = useAuth();
@@ -117,18 +104,6 @@ export default function SettingsScreen() {
           Owners invite property team members, limit access by property, and share one-time codes. They never see
           unassigned properties.
         </Text>
-      </View>
-
-      <View style={styles.section}>
-        <SectionTitle>Preview pages</SectionTitle>
-        {previewRows.map((row) => (
-          <Link key={row.label} href={row.href} asChild>
-            <Pressable style={styles.settingRow}>
-              <Text style={styles.settingLabel}>{row.label}</Text>
-              <ChevronRight color={colors.inkMuted} size={18} strokeWidth={1.75} />
-            </Pressable>
-          </Link>
-        ))}
       </View>
     </Screen>
   );

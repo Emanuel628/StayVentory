@@ -45,18 +45,6 @@ export default function TabLayout() {
           title: 'Notes',
         }}
       />
-      <Tabs.Screen
-        name="cleaners"
-        options={{
-          title: 'Team',
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: 'Settings',
-        }}
-      />
     </Tabs>
   );
 }

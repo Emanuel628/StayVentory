@@ -72,26 +72,40 @@ function RootLayoutNav() {
 function AppShell() {
   const router = useRouter();
   const pathname = usePathname();
-  const { status, isConfigured } = useAuth();
+  const { status, isConfigured, role, user } = useAuth();
   const publicPaths = new Set(['/welcome', '/login', '/register', '/forgot-password', '/team-register']);
-  const showFooter = !publicPaths.has(pathname) && pathname !== '/+not-found';
+  const resolvedRole = role ?? (user?.user_metadata.role as 'owner' | 'cleaner' | undefined) ?? null;
+  const isPublicPath = publicPaths.has(pathname);
+  const isOwnerSession = status === 'authenticated' && resolvedRole !== 'cleaner';
+  const showFooter =
+    isOwnerSession && !isPublicPath && pathname !== '/+not-found' && pathname !== '/team-workspace';
 
   useEffect(() => {
     if (!isConfigured || status === 'loading') {
       return;
     }
 
-    const isPublicPath = publicPaths.has(pathname);
-
     if (status === 'signed_out' && !isPublicPath) {
       router.replace('/welcome');
       return;
     }
 
-    if (status === 'authenticated' && isPublicPath) {
+    if (status !== 'authenticated') {
+      return;
+    }
+
+    if (resolvedRole === 'cleaner') {
+      if (pathname !== '/team-workspace') {
+        router.replace('/team-workspace');
+      }
+
+      return;
+    }
+
+    if (isPublicPath || pathname === '/team-workspace') {
       router.replace('/');
     }
-  }, [isConfigured, pathname, router, status]);
+  }, [isConfigured, isPublicPath, pathname, resolvedRole, router, status]);
 
   if (isConfigured && status === 'loading') {
     return null;

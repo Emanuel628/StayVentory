@@ -1,5 +1,5 @@
 import { usePathname, useRouter } from 'expo-router';
-import { CalendarCheck2, HousePlus, NotebookPen, Settings2, ShieldCheck, TriangleAlert } from 'lucide-react-native';
+import { CalendarCheck2, HousePlus, NotebookPen, TriangleAlert } from 'lucide-react-native';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Svg, { Rect } from 'react-native-svg';
 
@@ -22,7 +22,7 @@ const footerItems: FooterItem[] = [
   {
     label: 'Cleaning',
     href: '/cleaning',
-    matches: ['/cleaning', '/team-workspace'],
+    matches: ['/cleaning'],
     renderIcon: (color) => <CalendarCheck2 color={color} size={18} strokeWidth={1.75} />,
   },
   {
@@ -48,18 +48,6 @@ const footerItems: FooterItem[] = [
     href: '/notes',
     matches: ['/notes'],
     renderIcon: (color) => <NotebookPen color={color} size={18} strokeWidth={1.75} />,
-  },
-  {
-    label: 'Team',
-    href: '/cleaners',
-    matches: ['/cleaners', '/give-access'],
-    renderIcon: (color) => <ShieldCheck color={color} size={18} strokeWidth={1.75} />,
-  },
-  {
-    label: 'Settings',
-    href: '/settings',
-    matches: ['/settings'],
-    renderIcon: (color) => <Settings2 color={color} size={18} strokeWidth={1.75} />,
   },
 ];
 

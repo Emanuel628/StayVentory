@@ -1,11 +1,11 @@
 import { Link } from 'expo-router';
-import { AlertTriangle, CalendarCheck2, ChevronRight, House, PackageSearch, ShieldCheck } from 'lucide-react-native';
+import { AlertTriangle, CalendarCheck2, ChevronRight, ClipboardCheck, House, PackageSearch } from 'lucide-react-native';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
 import { StatusStamp } from '@/src/components/StatusStamp';
-import { cleanerAccess, houses } from '@/src/data/mock';
+import { houses } from '@/src/data/mock';
 import { colors, iconTile, radius, space, type } from '@/src/theme/theme';
 
 const attentionHouses = houses.filter((house) => house.status !== 'ready');
@@ -38,6 +38,19 @@ const attentionIssues = [
   },
 ];
 
+const missingProof = [
+  {
+    id: '1',
+    house: 'The Linden House',
+    detail: 'Primary bathroom final photo still missing',
+  },
+  {
+    id: '2',
+    house: 'Cedar Retreat',
+    detail: 'Kitchen closeout video not uploaded yet',
+  },
+];
+
 export default function HomeScreen() {
   return (
     <Screen eyebrow="Home" title="Needs attention now">
@@ -50,9 +63,9 @@ export default function HomeScreen() {
             <Text style={styles.metricMeta}>need review</Text>
           </View>
           <View style={styles.metricBlock}>
-            <Text style={type.eyebrow}>Team</Text>
-            <Text style={styles.metricValue}>{cleanerAccess.length}</Text>
-            <Text style={styles.metricMeta}>assigned</Text>
+            <Text style={type.eyebrow}>Proof</Text>
+            <Text style={styles.metricValue}>{missingProof.length}</Text>
+            <Text style={styles.metricMeta}>items missing</Text>
           </View>
         </View>
       </View>
@@ -78,7 +91,7 @@ export default function HomeScreen() {
       </View>
 
       <View style={styles.section}>
-        <SectionTitle>Turnovers and restock</SectionTitle>
+        <SectionTitle>Urgent turnovers and restock</SectionTitle>
         {attentionJobs.map((item) => (
           <View key={item.id} style={styles.row}>
             <View style={styles.rowLeft}>
@@ -120,19 +133,19 @@ export default function HomeScreen() {
       </View>
 
       <View style={styles.section}>
-        <SectionTitle>Property team</SectionTitle>
-        <Link href="/cleaners" asChild>
-          <Pressable style={styles.inlineRow}>
+        <SectionTitle>Missing proof</SectionTitle>
+        {missingProof.map((item) => (
+          <View key={item.id} style={styles.inlineRow}>
             <View style={styles.inlineLeft}>
-              <ShieldCheck color={colors.teal} size={16} strokeWidth={1.75} />
+              <ClipboardCheck color={colors.ochre} size={16} strokeWidth={1.75} />
               <View style={styles.rowText}>
-                <Text style={styles.body}>Review property team access</Text>
-                <Text style={styles.rowMeta}>Invite team members and control property access.</Text>
+                <Text style={styles.body}>{item.house}</Text>
+                <Text style={styles.rowMeta}>{item.detail}</Text>
               </View>
             </View>
             <ChevronRight color={colors.inkMuted} size={16} strokeWidth={1.75} />
-          </Pressable>
-        </Link>
+          </View>
+        ))}
       </View>
     </Screen>
   );
