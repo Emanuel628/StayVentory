@@ -1,12 +1,12 @@
 import { Link, useLocalSearchParams } from 'expo-router';
-import { ChevronRight, Plus, ShieldCheck } from 'lucide-react-native';
+import { Plus, ShieldCheck } from 'lucide-react-native';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { ListRowLink } from '@/src/components/ListRowLink';
 import { QuantityDots } from '@/src/components/QuantityDots';
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
-import { getHouseById, getRoomsByHouseId, issuePreview, propertyInstructions } from '@/src/data/mock';
+import { getHouseById, getRoomsByHouseId } from '@/src/data/mock';
 import { colors, radius, space, type } from '@/src/theme/theme';
 
 export default function HouseDetailScreen() {
@@ -83,28 +83,6 @@ export default function HouseDetailScreen() {
           </Text>
         </View>
       </View>
-
-      <View style={styles.section}>
-        <SectionTitle>Instructions</SectionTitle>
-        {propertyInstructions.map((instruction) => (
-          <View key={instruction} style={styles.simpleRow}>
-            <Text style={styles.body}>{instruction}</Text>
-          </View>
-        ))}
-      </View>
-
-      <View style={styles.section}>
-        <SectionTitle>Open issues</SectionTitle>
-        {issuePreview.map((issue) => (
-          <View key={issue.id} style={styles.inlineListRow}>
-            <View>
-              <Text style={styles.body}>{issue.label}</Text>
-              <Text style={styles.meta}>{issue.room}</Text>
-            </View>
-            <ChevronRight color={colors.inkMuted} size={16} strokeWidth={1.75} />
-          </View>
-        ))}
-      </View>
     </Screen>
   );
 }
@@ -149,20 +127,6 @@ const styles = StyleSheet.create({
   linkText: {
     ...type.buttonLabel,
     color: colors.teal,
-  },
-  simpleRow: {
-    paddingVertical: space.lg,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.hairline,
-  },
-  inlineListRow: {
-    paddingVertical: space.lg,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.hairline,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: space.md,
   },
   body: {
     ...type.body,

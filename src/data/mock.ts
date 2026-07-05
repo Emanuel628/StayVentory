@@ -42,6 +42,18 @@ export type CleanerAccessItem = {
   properties: string[];
 };
 
+export type RoomInstruction = {
+  id: string;
+  roomId: string;
+  text: string;
+};
+
+export type RoomIssue = {
+  id: string;
+  roomId: string;
+  label: string;
+};
+
 export const houses: HouseItem[] = [
   {
     id: 'linden-house',
@@ -223,15 +235,19 @@ export const cleanerAccess: CleanerAccessItem[] = [
   },
 ];
 
-export const propertyInstructions = [
-  'Use the laundry closet top shelf for extra towels and paper goods.',
-  'Upload final photos for the kitchen, primary bathroom, and primary bedroom.',
-  'Text or call the owner only for urgent lock, water, or guest-readiness issues.',
+export const roomInstructions: RoomInstruction[] = [
+  { id: 'bath-1', roomId: 'primary-bathroom', text: 'Restock guest towels on the upper linen shelf.' },
+  { id: 'bath-2', roomId: 'primary-bathroom', text: 'Upload a final photo of the vanity and shower area.' },
+  { id: 'bed-1', roomId: 'primary-bedroom', text: 'Make the bed with the backup sheet set if the current set is stained.' },
+  { id: 'bed-2', roomId: 'primary-bedroom', text: 'Check both bedside drawers for leftover guest items.' },
+  { id: 'living-1', roomId: 'living-room', text: 'Straighten sofa pillows and verify the remote is visible.' },
+  { id: 'kitchen-1', roomId: 'kitchen', text: 'Restock coffee pods and wipe appliance fronts.' },
 ];
 
-export const issuePreview = [
-  { id: 'lamp', label: 'Lamp switch broken', room: 'Living Room' },
-  { id: 'fan', label: 'Exhaust fan slow', room: 'Primary Bathroom' },
+export const roomIssues: RoomIssue[] = [
+  { id: 'lamp', roomId: 'living-room', label: 'Lamp switch broken' },
+  { id: 'fan', roomId: 'primary-bathroom', label: 'Exhaust fan slow' },
+  { id: 'soap', roomId: 'primary-bathroom', label: 'Soap dispenser pump sticking' },
 ];
 
 export const ownerContact = {
@@ -244,3 +260,5 @@ export const getHouseById = (id: string) => houses.find((house) => house.id === 
 export const getRoomsByHouseId = (houseId: string) => rooms.filter((room) => room.houseId === houseId);
 export const getRoomById = (id: string) => rooms.find((room) => room.id === id) ?? rooms[0];
 export const getInventoryByRoomId = (roomId: string) => inventoryByRoom.filter((row) => row.roomId === roomId);
+export const getInstructionsByRoomId = (roomId: string) => roomInstructions.filter((item) => item.roomId === roomId);
+export const getIssuesByRoomId = (roomId: string) => roomIssues.filter((item) => item.roomId === roomId);

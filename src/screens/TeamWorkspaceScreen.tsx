@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
 import { StatusStamp } from '@/src/components/StatusStamp';
-import { houses, ownerContact, propertyInstructions } from '@/src/data/mock';
+import { houses, ownerContact, roomInstructions } from '@/src/data/mock';
 import { colors, iconTile, radius, space, type } from '@/src/theme/theme';
 
 const assignedHouses = houses.slice(0, 2);
@@ -22,6 +22,7 @@ const assignedJobs = [
     status: 'lowStock' as const,
   },
 ];
+const workspaceInstructions = roomInstructions.slice(0, 3);
 
 export function TeamWorkspaceScreen() {
   return (
@@ -95,9 +96,9 @@ export function TeamWorkspaceScreen() {
 
       <View style={styles.section}>
         <SectionTitle>Property instructions</SectionTitle>
-        {propertyInstructions.map((instruction) => (
-          <View key={instruction} style={styles.simpleRow}>
-            <Text style={styles.body}>{instruction}</Text>
+        {workspaceInstructions.map((instruction) => (
+          <View key={instruction.id} style={styles.simpleRow}>
+            <Text style={styles.body}>{instruction.text}</Text>
           </View>
         ))}
       </View>

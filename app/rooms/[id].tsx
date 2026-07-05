@@ -6,13 +6,15 @@ import { QuantityDots } from '@/src/components/QuantityDots';
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
 import { StatusStamp } from '@/src/components/StatusStamp';
-import { getInventoryByRoomId, getRoomById } from '@/src/data/mock';
+import { getInstructionsByRoomId, getInventoryByRoomId, getIssuesByRoomId, getRoomById } from '@/src/data/mock';
 import { colors, radius, space, type } from '@/src/theme/theme';
 
 export default function RoomDetailScreen() {
   const params = useLocalSearchParams<{ id: string }>();
   const room = getRoomById(params.id ?? '');
   const inventory = getInventoryByRoomId(room.id);
+  const instructions = getInstructionsByRoomId(room.id);
+  const issues = getIssuesByRoomId(room.id);
 
   return (
     <Screen eyebrow="Room" title={room.name}>
@@ -111,6 +113,24 @@ export default function RoomDetailScreen() {
             <Text style={styles.body}>Report missing, damaged, or replacement-needed items.</Text>
           </View>
         </View>
+      </View>
+
+      <View style={styles.section}>
+        <SectionTitle>Instructions</SectionTitle>
+        {instructions.map((instruction) => (
+          <View key={instruction.id} style={styles.simpleRow}>
+            <Text style={styles.body}>{instruction.text}</Text>
+          </View>
+        ))}
+      </View>
+
+      <View style={styles.section}>
+        <SectionTitle>Open issues</SectionTitle>
+        {issues.map((issue) => (
+          <View key={issue.id} style={styles.simpleRow}>
+            <Text style={styles.body}>{issue.label}</Text>
+          </View>
+        ))}
       </View>
     </Screen>
   );
@@ -241,5 +261,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: space.sm,
+  },
+  simpleRow: {
+    paddingVertical: space.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.hairline,
   },
 });
