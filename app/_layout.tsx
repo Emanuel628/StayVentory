@@ -127,7 +127,9 @@ function AppShell() {
           <Stack.Screen name="team-register" />
           <Stack.Screen name="team-workspace" />
           <Stack.Screen name="add-property" />
+          <Stack.Screen name="add-cleaning-job" />
           <Stack.Screen name="add-room" />
+          <Stack.Screen name="cleaning-jobs/[id]" />
           <Stack.Screen name="room-icon-picker" />
           <Stack.Screen name="give-access" />
           <Stack.Screen name="houses/[id]" />

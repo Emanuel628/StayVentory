@@ -123,6 +123,19 @@ export default function HouseDetailScreen() {
 
       <View style={styles.section}>
         <View style={styles.rowBetween}>
+          <SectionTitle>Turnovers</SectionTitle>
+          <Link href={{ pathname: '/add-cleaning-job', params: { houseId } }} asChild>
+            <Pressable style={styles.inlineAction}>
+              <Plus color={colors.teal} size={14} strokeWidth={1.75} />
+              <Text style={styles.inlineActionLabel}>Schedule job</Text>
+            </Pressable>
+          </Link>
+        </View>
+        <Text style={styles.meta}>Create a cleaning job for this property to generate the live room checklist runs.</Text>
+      </View>
+
+      <View style={styles.section}>
+        <View style={styles.rowBetween}>
           <SectionTitle>Property team access</SectionTitle>
           <Link href="/cleaners" asChild>
             <Pressable style={styles.linkRow}>
