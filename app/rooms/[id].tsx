@@ -1,12 +1,12 @@
 import { useLocalSearchParams } from 'expo-router';
-import { ArrowLeft, Camera, CircleAlert, MapPin, NotebookPen, Plus } from 'lucide-react-native';
+import { ArrowLeft, Camera, CircleAlert, NotebookPen, Plus } from 'lucide-react-native';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { QuantityDots } from '@/src/components/QuantityDots';
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
 import { StatusStamp } from '@/src/components/StatusStamp';
-import { getInventoryByRoomId, getRoomById, ownerContact } from '@/src/data/mock';
+import { getInventoryByRoomId, getRoomById } from '@/src/data/mock';
 import { colors, radius, space, type } from '@/src/theme/theme';
 
 export default function RoomDetailScreen() {
@@ -89,19 +89,6 @@ export default function RoomDetailScreen() {
           <View style={styles.noteRow}>
             <CircleAlert color={colors.rust} size={16} strokeWidth={1.75} />
             <Text style={styles.body}>Report missing, damaged, or replacement-needed items.</Text>
-          </View>
-        </View>
-      </View>
-
-      <View style={styles.section}>
-        <SectionTitle>Owner contact</SectionTitle>
-        <View style={styles.contactBlock}>
-          <Text style={styles.body}>{ownerContact.name}</Text>
-          <Text style={styles.meta}>{ownerContact.phone}</Text>
-          <Text style={styles.meta}>{ownerContact.email}</Text>
-          <View style={styles.contactNote}>
-            <MapPin color={colors.inkMuted} size={14} strokeWidth={1.75} />
-            <Text style={styles.meta}>Visible only to assigned property team members.</Text>
           </View>
         </View>
       </View>
@@ -224,15 +211,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: space.sm,
-  },
-  contactBlock: {
-    paddingVertical: space.md,
-    gap: space.xs,
-  },
-  contactNote: {
-    paddingTop: space.sm,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space.xs,
   },
 });

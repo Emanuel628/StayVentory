@@ -21,6 +21,7 @@ const previewRows: { label: string; href: Href }[] = [
   { label: 'Forgot password', href: '/forgot-password' },
   { label: 'Property team register', href: '/team-register' },
   { label: 'Property team workspace', href: '/team-workspace' },
+  { label: 'Add property', href: '/add-property' },
 ];
 
 export default function SettingsScreen() {

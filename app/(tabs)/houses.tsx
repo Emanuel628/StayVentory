@@ -12,15 +12,20 @@ export default function HousesScreen() {
   return (
     <Screen eyebrow="Houses" title="Your houses">
       <View style={styles.section}>
-        <View style={styles.sectionHeaderRow}>
-          <SectionTitle>Your houses</SectionTitle>
-          <Link href="/cleaners" asChild>
+        <SectionTitle>Empty state</SectionTitle>
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyTitle}>Add your first property</Text>
+          <Link href="/add-property" asChild>
             <Pressable style={styles.addRow}>
               <Plus color={colors.teal} size={14} strokeWidth={1.75} />
-              <Text style={styles.addLabel}>Property team</Text>
+              <Text style={styles.addLabel}>Add your first property</Text>
             </Pressable>
           </Link>
         </View>
+      </View>
+
+      <View style={styles.section}>
+        <SectionTitle>Your houses</SectionTitle>
         {houses.map((house) => (
           <ListRowLink
             key={house.id}
@@ -42,11 +47,15 @@ const styles = StyleSheet.create({
   section: {
     gap: space.md,
   },
-  sectionHeaderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: space.md,
+  emptyState: {
+    backgroundColor: colors.paperRaised,
+    borderRadius: 3,
+    padding: space.md,
+    gap: space.sm,
+  },
+  emptyTitle: {
+    ...type.body,
+    color: colors.ink,
   },
   addRow: {
     flexDirection: 'row',
