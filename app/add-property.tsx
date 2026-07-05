@@ -51,7 +51,7 @@ export default function AddPropertyScreen() {
 
       <View style={styles.section}>
         <SectionTitle>Access and setup</SectionTitle>
-        <Link href="/cleaners" asChild>
+        <Link href="/give-access" asChild>
           <Pressable style={styles.inlineRow}>
             <View style={styles.inlineLeft}>
               <ShieldCheck color={colors.teal} size={16} strokeWidth={1.75} />

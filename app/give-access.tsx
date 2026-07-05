@@ -1,0 +1,127 @@
+import { KeyRound, Mail, ShieldCheck } from 'lucide-react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
+
+import { Screen } from '@/src/components/Screen';
+import { SectionTitle } from '@/src/components/SectionTitle';
+import { colors, radius, space, type } from '@/src/theme/theme';
+
+export default function GiveAccessScreen() {
+  return (
+    <Screen eyebrow="Access" title="Give property access">
+      <View style={styles.section}>
+        <SectionTitle>Invite property team</SectionTitle>
+        <View style={styles.formField}>
+          <Text style={styles.fieldLabel}>Email</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="teammember@example.com"
+            placeholderTextColor={colors.inkMuted}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <SectionTitle>Access code</SectionTitle>
+        <View style={styles.actionRow}>
+          <View style={styles.actionLeft}>
+            <KeyRound color={colors.teal} size={16} strokeWidth={1.75} />
+            <Text style={styles.actionLabel}>Generate access code</Text>
+          </View>
+          <Text style={styles.actionLink}>Run</Text>
+        </View>
+
+        <View style={styles.codeShelf}>
+          <Text style={styles.codeLabel}>Generated code</Text>
+          <Text style={styles.codeValue}>LINDEN-4821-QX</Text>
+        </View>
+      </View>
+
+      <View style={styles.noteBlock}>
+        <ShieldCheck color={colors.ochre} size={16} strokeWidth={1.75} />
+        <Text style={styles.noteText}>
+          Owners generate a new one-time string each time they want to grant access to a property team member.
+        </Text>
+      </View>
+    </Screen>
+  );
+}
+
+const styles = StyleSheet.create({
+  section: {
+    gap: space.md,
+  },
+  formField: {
+    backgroundColor: colors.paperRaised,
+    borderWidth: 1,
+    borderColor: colors.hairline,
+    borderRadius: radius.control,
+    paddingHorizontal: space.md,
+    paddingVertical: space.sm,
+    gap: 2,
+  },
+  fieldLabel: {
+    ...type.eyebrow,
+    color: colors.ink,
+  },
+  input: {
+    minHeight: 44,
+    borderRadius: radius.control,
+    borderWidth: 1,
+    borderColor: colors.hairline,
+    paddingHorizontal: space.md,
+    paddingVertical: space.sm,
+    backgroundColor: colors.paper,
+    ...type.body,
+    color: colors.inkBody,
+  },
+  actionRow: {
+    paddingVertical: space.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.hairline,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: space.md,
+  },
+  actionLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.sm,
+  },
+  actionLabel: {
+    ...type.body,
+    color: colors.ink,
+  },
+  actionLink: {
+    ...type.buttonLabel,
+    color: colors.teal,
+  },
+  codeShelf: {
+    backgroundColor: colors.paperRaised,
+    borderRadius: radius.control,
+    paddingHorizontal: space.md,
+    paddingVertical: space.md,
+    gap: 2,
+  },
+  codeLabel: {
+    ...type.eyebrow,
+    color: colors.inkMuted,
+  },
+  codeValue: {
+    ...type.mono,
+    color: colors.teal,
+    fontSize: 14,
+  },
+  noteBlock: {
+    backgroundColor: colors.paperRaised,
+    borderRadius: radius.control,
+    padding: space.md,
+    gap: space.sm,
+  },
+  noteText: {
+    ...type.noteBody,
+    color: colors.inkBody,
+  },
+});
