@@ -14,7 +14,7 @@ const attentionJobs = [
   {
     id: '1',
     house: 'The Linden House',
-    detail: 'Cleaner arrives today at 2:00 PM',
+    detail: 'Property team arrives today at 2:00 PM',
     status: 'needsCleaning' as const,
   },
   {
@@ -50,7 +50,7 @@ export default function HomeScreen() {
             <Text style={styles.metricMeta}>need review</Text>
           </View>
           <View style={styles.metricBlock}>
-            <Text style={type.eyebrow}>Cleaners</Text>
+            <Text style={type.eyebrow}>Team</Text>
             <Text style={styles.metricValue}>{cleanerAccess.length}</Text>
             <Text style={styles.metricMeta}>assigned</Text>
           </View>
@@ -109,7 +109,7 @@ export default function HomeScreen() {
           <Link href="/cleaners" asChild>
             <Pressable style={styles.inlineLink}>
               <ShieldCheck color={colors.teal} size={14} strokeWidth={1.75} />
-              <Text style={styles.inlineLinkLabel}>Cleaner access</Text>
+              <Text style={styles.inlineLinkLabel}>Property team access</Text>
             </Pressable>
           </Link>
         </View>

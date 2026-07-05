@@ -38,7 +38,7 @@ export default function RoomDetailScreen() {
       </View>
 
       <View style={styles.section}>
-        <SectionTitle>Cleaner actions</SectionTitle>
+        <SectionTitle>Property team actions</SectionTitle>
         <View style={styles.noteBlock}>
           <View style={styles.noteRow}>
             <NotebookPen color={colors.teal} size={16} strokeWidth={1.75} />
@@ -63,7 +63,7 @@ export default function RoomDetailScreen() {
           <Text style={styles.meta}>{ownerContact.email}</Text>
           <View style={styles.contactNote}>
             <MapPin color={colors.inkMuted} size={14} strokeWidth={1.75} />
-            <Text style={styles.meta}>Visible to cleaners only for assigned properties.</Text>
+            <Text style={styles.meta}>Visible only to assigned property team members.</Text>
           </View>
         </View>
       </View>

@@ -71,7 +71,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="cleaners"
         options={{
-          title: 'Cleaners',
+          title: 'Team',
           tabBarIcon: ({ color }) => <ShieldCheck color={color} size={18} strokeWidth={1.75} />,
         }}
       />

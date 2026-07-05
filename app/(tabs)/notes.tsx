@@ -11,7 +11,7 @@ const notes = [
   },
   {
     id: '2',
-    label: 'Cleaner note',
+    label: 'Property team note',
     house: 'Cedar Retreat',
     body: 'Kitchen was fully restocked. Dish soap is low and should be added to the next supply run.',
   },

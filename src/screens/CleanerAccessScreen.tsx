@@ -8,19 +8,19 @@ import { colors, radius, space, type } from '@/src/theme/theme';
 
 export function CleanerAccessScreen() {
   return (
-    <Screen eyebrow="Cleaners" title="Owner invite access">
+    <Screen eyebrow="Property Team" title="Owner invite access">
       <View style={styles.section}>
         <SectionTitle>How it works</SectionTitle>
         <View style={styles.noteBlock}>
           <Text style={type.noteBody}>
-            Cleaners make their own cleaner account. Owners invite them by email or username, assign specific
-            properties, and share a one-time access code.
+            Property team members make their own account. Owners invite them by email or username, assign specific
+            properties, and generate a one-time access code when they want to grant access.
           </Text>
         </View>
       </View>
 
       <View style={styles.section}>
-        <SectionTitle>Assigned cleaners</SectionTitle>
+        <SectionTitle>Assigned property team</SectionTitle>
         {cleanerAccess.map((cleaner) => (
           <View key={cleaner.id} style={styles.cleanerBlock}>
             <Text style={styles.name}>{cleaner.name}</Text>
@@ -34,6 +34,10 @@ export function CleanerAccessScreen() {
             </View>
             <View style={styles.detailRow}>
               <KeyRound color={colors.teal} size={14} strokeWidth={1.75} />
+              <Text style={styles.meta}>Generate Access Code</Text>
+            </View>
+            <View style={styles.codeShelf}>
+              <Text style={styles.codeLabel}>Generated code appears here</Text>
               <Text style={styles.code}>{cleaner.code}</Text>
             </View>
             <View style={styles.detailRow}>
@@ -75,8 +79,20 @@ const styles = StyleSheet.create({
     ...type.bodySmallMuted,
     color: colors.inkBody,
   },
+  codeShelf: {
+    backgroundColor: colors.paperRaised,
+    borderRadius: radius.control,
+    paddingHorizontal: space.md,
+    paddingVertical: space.sm,
+    gap: 2,
+  },
+  codeLabel: {
+    ...type.eyebrow,
+    color: colors.inkMuted,
+  },
   code: {
     ...type.mono,
     color: colors.teal,
+    fontSize: 13,
   },
 });

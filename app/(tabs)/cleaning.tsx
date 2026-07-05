@@ -57,7 +57,7 @@ export default function CleaningScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Cleaner checklist preview</Text>
+        <Text style={styles.sectionTitle}>Property team checklist preview</Text>
         <View style={styles.noteBlock}>
           <Text style={type.eyebrow}>Primary bathroom</Text>
           {checklist.map((item) => (

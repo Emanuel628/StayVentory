@@ -17,7 +17,7 @@ export default function HousesScreen() {
           <Link href="/cleaners" asChild>
             <Pressable style={styles.addRow}>
               <Plus color={colors.teal} size={14} strokeWidth={1.75} />
-              <Text style={styles.addLabel}>Cleaner access</Text>
+              <Text style={styles.addLabel}>Property team</Text>
             </Pressable>
           </Link>
         </View>

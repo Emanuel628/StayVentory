@@ -19,7 +19,7 @@ export default function HouseDetailScreen() {
       <View style={styles.section}>
         <SectionTitle>Property overview</SectionTitle>
         <Text style={styles.meta}>{house.address}</Text>
-        <Text style={styles.meta}>Cleaner access, instructions, and room readiness live here.</Text>
+        <Text style={styles.meta}>Property team access, instructions, and room readiness live here.</Text>
       </View>
 
       <View style={styles.section}>
@@ -68,7 +68,7 @@ export default function HouseDetailScreen() {
 
       <View style={styles.section}>
         <View style={styles.rowBetween}>
-          <SectionTitle>Cleaner access</SectionTitle>
+          <SectionTitle>Property team access</SectionTitle>
           <Link href="/cleaners" asChild>
             <Pressable style={styles.linkRow}>
               <ShieldCheck color={colors.teal} size={16} strokeWidth={1.75} />
@@ -79,7 +79,7 @@ export default function HouseDetailScreen() {
         <View style={styles.noteBlock}>
           <Text style={type.eyebrow}>Assigned access</Text>
           <Text style={type.noteBody}>
-            Owners invite cleaners, choose the properties they can update, and share a one-time access code.
+            Owners invite property team members, choose the properties they can update, and share a one-time access code.
           </Text>
         </View>
       </View>

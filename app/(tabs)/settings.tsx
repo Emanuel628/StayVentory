@@ -9,9 +9,17 @@ import { colors, space, type } from '@/src/theme/theme';
 const rows: { label: string; href: Href }[] = [
   { label: 'Profile', href: '/settings' },
   { label: 'House playbook', href: '/settings' },
-  { label: 'Cleaner access', href: '/cleaners' },
+  { label: 'Property team access', href: '/cleaners' },
   { label: 'Notifications', href: '/settings' },
   { label: 'Design lock', href: '/settings' },
+];
+
+const previewRows: { label: string; href: Href }[] = [
+  { label: 'Welcome page', href: '/welcome' },
+  { label: 'Owner register', href: '/register' },
+  { label: 'Login', href: '/login' },
+  { label: 'Forgot password', href: '/forgot-password' },
+  { label: 'Property team register', href: '/team-register' },
 ];
 
 export default function SettingsScreen() {
@@ -30,11 +38,23 @@ export default function SettingsScreen() {
       </View>
 
       <View style={styles.section}>
-        <SectionTitle>Cleaner model</SectionTitle>
+        <SectionTitle>Property team model</SectionTitle>
         <Text style={styles.helpText}>
-          Owners invite cleaners, limit access by property, and share one-time codes. Cleaners never see unassigned
-          properties.
+          Owners invite property team members, limit access by property, and share one-time codes. They never see
+          unassigned properties.
         </Text>
+      </View>
+
+      <View style={styles.section}>
+        <SectionTitle>Preview pages</SectionTitle>
+        {previewRows.map((row) => (
+          <Link key={row.label} href={row.href} asChild>
+            <Pressable style={styles.settingRow}>
+              <Text style={styles.settingLabel}>{row.label}</Text>
+              <ChevronRight color={colors.inkMuted} size={18} strokeWidth={1.75} />
+            </Pressable>
+          </Link>
+        ))}
       </View>
     </Screen>
   );
