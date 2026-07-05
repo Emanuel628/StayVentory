@@ -36,12 +36,16 @@ export function AuthShell({ eyebrow, title, subtitle, children, actions = [] }: 
             <View style={styles.actions}>
               {actions.map((action) => (
                 <Link key={String(action.href)} href={action.href} asChild>
-                  <Pressable style={[styles.button, action.primary ? styles.primaryButton : styles.secondaryButton]}>
+                  <Pressable
+                    style={StyleSheet.flatten([
+                      styles.button,
+                      action.primary ? styles.primaryButton : styles.secondaryButton,
+                    ])}>
                     <Text
-                      style={[
+                      style={StyleSheet.flatten([
                         styles.buttonLabel,
                         action.primary ? styles.primaryButtonLabel : styles.secondaryButtonLabel,
-                      ]}>
+                      ])}>
                       {action.label}
                     </Text>
                   </Pressable>
