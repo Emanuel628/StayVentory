@@ -43,7 +43,7 @@ export function AuthShell({ eyebrow, title, subtitle, children, actions = [], li
           {actions.length ? (
             <View style={styles.actions}>
               {actions.map((action) => (
-                <Link key={String(action.href)} href={action.href} asChild>
+                <Link key={`${String(action.href)}-${action.label}`} href={action.href} asChild>
                   <Pressable
                     style={StyleSheet.flatten([
                       styles.button,
@@ -64,7 +64,7 @@ export function AuthShell({ eyebrow, title, subtitle, children, actions = [], li
           {links.length ? (
             <View style={styles.links}>
               {links.map((link) => (
-                <Link key={String(link.href)} href={link.href} asChild>
+                <Link key={`${String(link.href)}-${link.label}`} href={link.href} asChild>
                   <Pressable style={styles.textLink}>
                     <Text style={styles.textLinkLabel}>{link.label}</Text>
                   </Pressable>

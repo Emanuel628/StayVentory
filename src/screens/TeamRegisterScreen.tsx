@@ -12,6 +12,7 @@ export function TeamRegisterScreen() {
       <AuthField label="Full name" value="Maya Brooks" />
       <AuthField label="Email" value="maya@example.com" />
       <AuthField label="Username" value="@mayateam" hint="Owners can invite by email or username." />
+      <AuthField label="Access code (optional)" value="Enter access code" />
       <AuthField label="Password" value="Create a secure password" />
     </AuthShell>
   );
