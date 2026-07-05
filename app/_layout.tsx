@@ -14,6 +14,8 @@ import { Platform } from 'react-native';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
+import { AuthProvider } from '@/src/providers/AuthProvider';
+
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -60,22 +62,24 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="welcome" />
-      <Stack.Screen name="login" />
-      <Stack.Screen name="register" />
-      <Stack.Screen name="forgot-password" />
-      <Stack.Screen name="team-register" />
-      <Stack.Screen name="team-workspace" />
-      <Stack.Screen name="add-property" />
-      <Stack.Screen name="add-room" />
-      <Stack.Screen name="room-icon-picker" />
-      <Stack.Screen name="give-access" />
-      <Stack.Screen name="houses/[id]" />
-      <Stack.Screen name="rooms/[id]" />
-      <Stack.Screen name="cleaners" />
-      <Stack.Screen name="+not-found" />
-    </Stack>
+    <AuthProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="welcome" />
+        <Stack.Screen name="login" />
+        <Stack.Screen name="register" />
+        <Stack.Screen name="forgot-password" />
+        <Stack.Screen name="team-register" />
+        <Stack.Screen name="team-workspace" />
+        <Stack.Screen name="add-property" />
+        <Stack.Screen name="add-room" />
+        <Stack.Screen name="room-icon-picker" />
+        <Stack.Screen name="give-access" />
+        <Stack.Screen name="houses/[id]" />
+        <Stack.Screen name="rooms/[id]" />
+        <Stack.Screen name="cleaners" />
+        <Stack.Screen name="+not-found" />
+      </Stack>
+    </AuthProvider>
   );
 }

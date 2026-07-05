@@ -48,6 +48,19 @@ The next technical step should be:
 3. create the Supabase schema
 4. build the owner auth and houses flow first
 
+## Backend foundation
+
+The project now includes the first backend wiring layer:
+
+- Supabase client bootstrap
+- typed database definitions
+- auth/session provider
+- starter auth service
+- starter houses service
+- initial SQL schema migration
+
+Setup details live in [docs/BACKEND_SETUP.md](docs/BACKEND_SETUP.md).
+
 ## Current product decisions
 
 - StayVentory uses owner-invited cleaner access
