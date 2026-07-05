@@ -77,7 +77,7 @@ export function AppFooter() {
           <Pressable key={item.label} style={styles.item} onPress={() => router.replace(item.href as never)}>
             <View style={[styles.iconWrap, isActive ? styles.iconWrapActive : null]}>{item.renderIcon(iconColor, isActive)}</View>
             <Text style={[styles.label, { color: labelColor }]}>{item.label}</Text>
-            <View style={[styles.activeBar, isActive ? styles.activeBarVisible : null]} />
+            {isHome ? null : <View style={[styles.activeBar, isActive ? styles.activeBarVisible : null]} />}
           </Pressable>
         );
       })}
