@@ -1,9 +1,11 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { CheckSquare2, Square } from 'lucide-react-native';
 
 import { AuthField } from '@/src/components/AuthField';
 import { AuthShell } from '@/src/components/AuthShell';
+import { getPasswordStrength } from '@/src/lib/passwordStrength';
 import { formatRetryAfter, getRateLimitState, recordRateLimitHit } from '@/src/services/rateLimit';
 import { signUpWithPassword } from '@/src/services/auth';
 import { colors, space, type } from '@/src/theme/theme';
@@ -14,8 +16,10 @@ export function RegisterScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const passwordStrength = getPasswordStrength(password);
 
   const handleRegister = async () => {
     const normalizedEmail = email.trim().toLowerCase();
@@ -85,22 +89,42 @@ export function RegisterScreen() {
         keyboardType="email-address"
         inputMode="email"
       />
-      <AuthField label="Password" value={password} onChangeText={setPassword} placeholder="Create a secure password" secureTextEntry />
+      <AuthField
+        label="Password"
+        value={password}
+        onChangeText={setPassword}
+        placeholder="Create a secure password"
+        secureTextEntry={!showPassword}
+      />
       <AuthField
         label="Confirm password"
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         placeholder="Repeat your password"
-        secureTextEntry
+        secureTextEntry={!showPassword}
       />
+      <Pressable style={styles.toggleRow} onPress={() => setShowPassword((current) => !current)}>
+        {showPassword ? (
+          <CheckSquare2 color={colors.teal} size={16} strokeWidth={1.75} />
+        ) : (
+          <Square color={colors.inkMuted} size={16} strokeWidth={1.75} />
+        )}
+        <Text style={styles.toggleLabel}>Show password</Text>
+      </Pressable>
       <View style={styles.passwordBlock}>
         <Text style={styles.passwordTitle}>Password strength</Text>
         <View style={styles.strengthRow}>
-          <View style={[styles.strengthBar, styles.strengthBarActive]} />
-          <View style={[styles.strengthBar, styles.strengthBarActive]} />
-          <View style={styles.strengthBar} />
-          <View style={styles.strengthBar} />
+          {[0, 1, 2, 3].map((index) => (
+            <View
+              key={index}
+              style={[
+                styles.strengthBar,
+                index < passwordStrength.score ? { backgroundColor: passwordStrength.color } : null,
+              ]}
+            />
+          ))}
         </View>
+        <Text style={[styles.strengthLabel, { color: passwordStrength.color }]}>{passwordStrength.label}</Text>
         <Text style={styles.ruleText}>Use at least 8 characters, one capital letter, one number, and one special character.</Text>
       </View>
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
@@ -116,6 +140,15 @@ const styles = StyleSheet.create({
     ...type.eyebrow,
     color: colors.ink,
   },
+  toggleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.sm,
+  },
+  toggleLabel: {
+    ...type.bodySmallMuted,
+    color: colors.ink,
+  },
   strengthRow: {
     flexDirection: 'row',
     gap: space.xs,
@@ -126,8 +159,8 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     backgroundColor: colors.hairline,
   },
-  strengthBarActive: {
-    backgroundColor: colors.teal,
+  strengthLabel: {
+    ...type.bodySmallMuted,
   },
   ruleText: {
     ...type.bodySmallMuted,

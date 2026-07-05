@@ -1,17 +1,19 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Text } from 'react-native';
+import { Pressable, StyleSheet, Text } from 'react-native';
+import { CheckSquare2, Square } from 'lucide-react-native';
 
 import { AuthField } from '@/src/components/AuthField';
 import { AuthShell } from '@/src/components/AuthShell';
 import { clearRateLimit, formatRetryAfter, getRateLimitState, recordRateLimitHit } from '@/src/services/rateLimit';
 import { signInWithPassword } from '@/src/services/auth';
-import { colors, type } from '@/src/theme/theme';
+import { colors, space, type } from '@/src/theme/theme';
 
 export function LoginScreen() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -71,9 +73,29 @@ export function LoginScreen() {
         value={password}
         onChangeText={setPassword}
         placeholder="Enter your password"
-        secureTextEntry
+        secureTextEntry={!showPassword}
       />
+      <Pressable style={styles.toggleRow} onPress={() => setShowPassword((current) => !current)}>
+        {showPassword ? (
+          <CheckSquare2 color={colors.teal} size={16} strokeWidth={1.75} />
+        ) : (
+          <Square color={colors.inkMuted} size={16} strokeWidth={1.75} />
+        )}
+        <Text style={styles.toggleLabel}>Show password</Text>
+      </Pressable>
       {error ? <Text style={{ ...type.bodySmallMuted, color: colors.rust }}>{error}</Text> : null}
     </AuthShell>
   );
 }
+
+const styles = StyleSheet.create({
+  toggleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.sm,
+  },
+  toggleLabel: {
+    ...type.bodySmallMuted,
+    color: colors.ink,
+  },
+});
