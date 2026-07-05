@@ -47,3 +47,10 @@ The next technical step should be:
 2. move the design tokens/components into the real app structure
 3. create the Supabase schema
 4. build the owner auth and houses flow first
+
+## Current product decisions
+
+- StayVentory uses owner-invited cleaner access
+- cleaners create their own cleaner accounts
+- owners grant access by invite plus one-time code
+- cleaner visibility is limited to assigned properties only
