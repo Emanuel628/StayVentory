@@ -95,6 +95,7 @@ export type Database = {
           house_id: string;
           id: string;
           name: string;
+          room_id: string | null;
           room_type: string;
         };
         Insert: {
@@ -102,6 +103,7 @@ export type Database = {
           house_id: string;
           id?: string;
           name: string;
+          room_id?: string | null;
           room_type: string;
         };
         Update: Partial<Database['public']['Tables']['checklist_templates']['Insert']>;

@@ -1,10 +1,11 @@
 import { useFocusEffect, useLocalSearchParams } from 'expo-router';
-import { Plus } from 'lucide-react-native';
+import { Camera, Plus } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
+import { createRoomChecklistItem, listRoomChecklistTemplate } from '@/src/services/checklists';
 import { getFallbackRoomOption, getRoomOptionById, getRoomOptionByType } from '@/src/data/roomOptions';
 import { createRoomInventoryItem, listRoomInventory } from '@/src/services/inventory';
 import { getRoom } from '@/src/services/rooms';
@@ -58,6 +59,22 @@ type RoomInventoryRecord = {
     | null;
 };
 
+type ChecklistTemplateItemRecord = {
+  id: string;
+  label: string;
+  sort_order: number;
+  required_photo: boolean;
+};
+
+type ChecklistTemplateRecord = {
+  id: string;
+  house_id: string;
+  room_id: string | null;
+  room_type: string;
+  name: string;
+  checklist_template_items: ChecklistTemplateItemRecord[] | null;
+};
+
 function toIntegerText(value: string) {
   return value.replace(/\D/g, '');
 }
@@ -67,15 +84,21 @@ export default function RoomDetailScreen() {
   const roomId = params.id ?? '';
   const [room, setRoom] = useState<RoomRecord | null>(null);
   const [inventory, setInventory] = useState<RoomInventoryRecord[]>([]);
+  const [checklistItems, setChecklistItems] = useState<ChecklistTemplateItemRecord[]>([]);
   const [error, setError] = useState('');
   const [inventoryError, setInventoryError] = useState('');
+  const [checklistError, setChecklistError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isAddingItem, setIsAddingItem] = useState(false);
+  const [isAddingChecklistItem, setIsAddingChecklistItem] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [minText, setMinText] = useState('');
   const [maxText, setMaxText] = useState('');
   const [isSavingItem, setIsSavingItem] = useState(false);
+  const [checklistLabel, setChecklistLabel] = useState('');
+  const [requiresPhoto, setRequiresPhoto] = useState(false);
+  const [isSavingChecklistItem, setIsSavingChecklistItem] = useState(false);
 
   const loadRoomDetail = useCallback(async () => {
     if (!roomId) {
@@ -87,12 +110,14 @@ export default function RoomDetailScreen() {
     try {
       setError('');
       setInventoryError('');
+      setChecklistError('');
       setIsLoading(true);
 
-      const [{ data: roomData, error: roomError }, { data: inventoryData, error: inventoryLoadError }] = await Promise.all([
-        getRoom(roomId),
-        listRoomInventory(roomId),
-      ]);
+      const [
+        { data: roomData, error: roomError },
+        { data: inventoryData, error: inventoryLoadError },
+        { data: checklistTemplateData, error: checklistLoadError },
+      ] = await Promise.all([getRoom(roomId), listRoomInventory(roomId), listRoomChecklistTemplate(roomId)]);
 
       if (roomError) {
         setError(roomError.message);
@@ -103,8 +128,17 @@ export default function RoomDetailScreen() {
         setInventoryError(inventoryLoadError.message);
       }
 
+      if (checklistLoadError) {
+        setChecklistError(checklistLoadError.message);
+      }
+
       setRoom(roomData as RoomRecord);
       setInventory((inventoryData ?? []) as RoomInventoryRecord[]);
+      setChecklistItems(
+        (((checklistTemplateData as ChecklistTemplateRecord | null)?.checklist_template_items ?? []) as ChecklistTemplateItemRecord[])
+          .slice()
+          .sort((a, b) => a.sort_order - b.sort_order),
+      );
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : 'Unable to load room.');
     } finally {
@@ -169,6 +203,51 @@ export default function RoomDetailScreen() {
   };
 
   const house = Array.isArray(room?.houses) ? room.houses[0] : room?.houses ?? null;
+
+  const handleSaveChecklistItem = async () => {
+    const nextLabel = checklistLabel.trim();
+
+    if (!room?.id || !house?.id) {
+      setChecklistError('Room and house must exist before standards can be added.');
+      return;
+    }
+
+    if (!nextLabel) {
+      setChecklistError('Checklist item label is required.');
+      return;
+    }
+
+    try {
+      setChecklistError('');
+      setIsSavingChecklistItem(true);
+
+      const { data, error: createError } = await createRoomChecklistItem({
+        roomId: room.id,
+        houseId: house.id,
+        roomType: room.room_type,
+        roomName: room.name,
+        label: nextLabel,
+        requiredPhoto: requiresPhoto,
+      });
+
+      if (createError) {
+        setChecklistError(createError.message);
+        return;
+      }
+
+      setChecklistItems((current) =>
+        [...current, data as ChecklistTemplateItemRecord].sort((a, b) => a.sort_order - b.sort_order),
+      );
+      setChecklistLabel('');
+      setRequiresPhoto(false);
+      setIsAddingChecklistItem(false);
+    } catch (nextError) {
+      setChecklistError(nextError instanceof Error ? nextError.message : 'Unable to save checklist item.');
+    } finally {
+      setIsSavingChecklistItem(false);
+    }
+  };
+
   const roomOption = getRoomOptionById(room?.icon_key) ?? getRoomOptionByType(room?.room_type) ?? getFallbackRoomOption();
   const RoomIcon = roomOption.icon;
 
@@ -300,10 +379,72 @@ export default function RoomDetailScreen() {
       </View>
 
       <View style={styles.section}>
-        <SectionTitle>Guest-ready standard</SectionTitle>
-        <View style={styles.infoBlock}>
-          <Text style={styles.body}>Checklist standards and proof requirements come next on top of this live room record.</Text>
+        <View style={styles.sectionHeader}>
+          <SectionTitle>Guest-ready standard</SectionTitle>
+          <Pressable style={styles.inlineAction} onPress={() => setIsAddingChecklistItem(true)}>
+            <Plus color={colors.teal} size={14} strokeWidth={1.75} />
+            <Text style={styles.inlineActionLabel}>Add standard</Text>
+          </Pressable>
         </View>
+
+        {isAddingChecklistItem ? (
+          <View style={styles.formBlock}>
+            <Text style={styles.formTitle}>Add standard item</Text>
+            <View style={styles.formField}>
+              <Text style={styles.fieldLabel}>Checklist item</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Trash emptied, mirror clean, towels folded..."
+                placeholderTextColor={colors.inkMuted}
+                value={checklistLabel}
+                onChangeText={setChecklistLabel}
+              />
+            </View>
+            <Pressable style={styles.toggleRow} onPress={() => setRequiresPhoto((current) => !current)}>
+              <View style={styles.toggleTextBlock}>
+                <Text style={styles.body}>Require proof photo</Text>
+                <Text style={styles.meta}>Turn this on when the cleaner must upload a photo before the room can be signed off.</Text>
+              </View>
+              <View style={[styles.toggleBadge, requiresPhoto ? styles.toggleBadgeActive : null]}>
+                <Camera color={requiresPhoto ? colors.buttonPrimaryText : colors.inkMuted} size={14} strokeWidth={1.75} />
+                <Text style={[styles.toggleBadgeLabel, requiresPhoto ? styles.toggleBadgeLabelActive : null]}>
+                  {requiresPhoto ? 'Required' : 'Optional'}
+                </Text>
+              </View>
+            </Pressable>
+            <View style={styles.formActions}>
+              <Pressable style={styles.secondaryButton} onPress={() => setIsAddingChecklistItem(false)}>
+                <Text style={styles.secondaryButtonLabel}>Cancel</Text>
+              </Pressable>
+              <Pressable style={styles.primaryButton} onPress={handleSaveChecklistItem} disabled={isSavingChecklistItem}>
+                <Text style={styles.primaryButtonLabel}>{isSavingChecklistItem ? 'Saving standard...' : 'Save standard'}</Text>
+              </Pressable>
+            </View>
+          </View>
+        ) : null}
+
+        {checklistError ? <Text style={styles.errorText}>{checklistError}</Text> : null}
+
+        {!isLoading && !error && !checklistItems.length ? (
+          <View style={styles.infoBlock}>
+            <Text style={styles.body}>No room standards added yet.</Text>
+            <Text style={styles.meta}>Use this section to define what clean, stocked, and ready looks like for this room.</Text>
+          </View>
+        ) : null}
+
+        {checklistItems.map((item) => (
+          <View key={item.id} style={styles.inventoryRow}>
+            <View style={styles.inventoryText}>
+              <Text style={styles.body}>{item.label}</Text>
+              <Text style={styles.meta}>{item.required_photo ? 'Proof photo required' : 'No proof photo required'}</Text>
+            </View>
+            <View style={styles.inventoryRight}>
+              <Text style={[styles.inventoryCount, item.required_photo ? styles.requiredText : null]}>
+                {item.required_photo ? 'PHOTO' : 'STANDARD'}
+              </Text>
+            </View>
+          </View>
+        ))}
       </View>
     </Screen>
   );
@@ -426,6 +567,40 @@ const styles = StyleSheet.create({
     ...type.buttonLabel,
     color: colors.buttonPrimaryText,
   },
+  toggleRow: {
+    paddingVertical: space.sm,
+    gap: space.md,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  toggleTextBlock: {
+    flex: 1,
+    gap: 2,
+  },
+  toggleBadge: {
+    minHeight: 34,
+    borderRadius: radius.control,
+    borderWidth: 1,
+    borderColor: colors.hairline,
+    paddingHorizontal: space.md,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: space.xs,
+    backgroundColor: colors.paper,
+  },
+  toggleBadgeActive: {
+    backgroundColor: colors.teal,
+    borderColor: colors.teal,
+  },
+  toggleBadgeLabel: {
+    ...type.buttonLabel,
+    color: colors.inkMuted,
+  },
+  toggleBadgeLabelActive: {
+    color: colors.buttonPrimaryText,
+  },
   inventoryRow: {
     paddingVertical: space.lg,
     borderBottomWidth: 1,
@@ -446,6 +621,9 @@ const styles = StyleSheet.create({
   inventoryCount: {
     ...type.body,
     color: colors.ink,
+  },
+  requiredText: {
+    color: colors.teal,
   },
   description: {
     ...type.noteBody,
