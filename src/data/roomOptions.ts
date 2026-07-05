@@ -54,3 +54,15 @@ export const roomOptions: RoomOption[] = [
   { id: 'den', label: 'Den', icon: LampDesk, tileColor: colors.rust, iconColor: colors.rustOnDark },
   { id: 'gym', label: 'Home Gym', icon: Dumbbell, tileColor: '#6C7A5A', iconColor: '#EEF2E7' },
 ];
+
+export function getRoomOptionById(id?: string | null) {
+  return roomOptions.find((option) => option.id === id) ?? null;
+}
+
+export function getRoomOptionByType(roomType?: string | null) {
+  return getRoomOptionById(roomType);
+}
+
+export function getFallbackRoomOption() {
+  return roomOptions[0];
+}

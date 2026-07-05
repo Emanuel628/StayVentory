@@ -1,11 +1,13 @@
 import { useRouter } from 'expo-router';
 import { Link, useLocalSearchParams } from 'expo-router';
 import { ChevronRight, ImagePlus } from 'lucide-react-native';
+import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
 import { roomOptions } from '@/src/data/roomOptions';
+import { createRoom } from '@/src/services/rooms';
 import { colors, radius, space, type } from '@/src/theme/theme';
 
 export default function AddRoomScreen() {
@@ -14,6 +16,51 @@ export default function AddRoomScreen() {
   const selectedRoomOption = roomOptions.find((option) => option.id === params.selectedIcon) ?? null;
   const SelectedIcon = selectedRoomOption?.icon;
   const houseId = params.houseId ?? 'linden-house';
+  const [name, setName] = useState('');
+  const [instructions, setInstructions] = useState('');
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSave = async () => {
+    if (!houseId) {
+      setError('A house must be selected before creating a room.');
+      return;
+    }
+
+    if (!name.trim()) {
+      setError('Room title is required.');
+      return;
+    }
+
+    if (!selectedRoomOption) {
+      setError('Choose a room icon before saving.');
+      return;
+    }
+
+    try {
+      setError('');
+      setIsSubmitting(true);
+
+      const { data, error: createError } = await createRoom({
+        houseId,
+        name: name.trim(),
+        roomType: selectedRoomOption.id,
+        iconKey: selectedRoomOption.id,
+        instructions: instructions.trim() || null,
+      });
+
+      if (createError) {
+        setError(createError.message);
+        return;
+      }
+
+      router.replace({ pathname: '/rooms/[id]', params: { id: data.id } });
+    } catch (nextError) {
+      setError(nextError instanceof Error ? nextError.message : 'Unable to save room.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Screen eyebrow="Room" title="Add room" backHref={{ pathname: '/houses/[id]', params: { id: houseId } }} backLabel="Back to house">
@@ -21,7 +68,13 @@ export default function AddRoomScreen() {
         <SectionTitle>Room details</SectionTitle>
         <View style={styles.formField}>
           <Text style={styles.fieldLabel}>Title</Text>
-          <TextInput style={styles.input} placeholder="Enter room title" placeholderTextColor={colors.inkMuted} />
+          <TextInput
+            style={styles.input}
+            placeholder="Enter room title"
+            placeholderTextColor={colors.inkMuted}
+            value={name}
+            onChangeText={setName}
+          />
         </View>
         <View style={styles.formField}>
           <Text style={styles.fieldLabel}>Instructions</Text>
@@ -31,8 +84,11 @@ export default function AddRoomScreen() {
             placeholderTextColor={colors.inkMuted}
             multiline
             textAlignVertical="top"
+            value={instructions}
+            onChangeText={setInstructions}
           />
         </View>
+        {error ? <Text style={styles.errorText}>{error}</Text> : null}
       </View>
 
       <View style={styles.section}>
@@ -70,8 +126,9 @@ export default function AddRoomScreen() {
 
       <Pressable
         style={styles.saveButton}
-        onPress={() => router.replace({ pathname: '/houses/[id]', params: { id: houseId } })}>
-        <Text style={styles.saveLabel}>Save room</Text>
+        onPress={handleSave}
+        disabled={isSubmitting}>
+        <Text style={styles.saveLabel}>{isSubmitting ? 'Saving room...' : 'Save room'}</Text>
       </Pressable>
     </Screen>
   );
@@ -155,5 +212,9 @@ const styles = StyleSheet.create({
   saveLabel: {
     ...type.buttonLabel,
     color: colors.buttonPrimaryText,
+  },
+  errorText: {
+    ...type.bodySmallMuted,
+    color: colors.rust,
   },
 });
