@@ -1,5 +1,6 @@
-import { House, CalendarCheck2, TriangleAlert, NotebookPen, Settings2 } from 'lucide-react-native';
+import { House, HousePlus } from 'lucide-react-native';
 import { Tabs } from 'expo-router';
+import { StyleSheet, View } from 'react-native';
 
 import { colors } from '@/src/theme/theme';
 
@@ -13,9 +14,9 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: colors.paper,
           borderTopColor: colors.hairline,
-          height: 88,
-          paddingTop: 10,
-          paddingBottom: 14,
+          height: 84,
+          paddingTop: 8,
+          paddingBottom: 12,
         },
         tabBarLabelStyle: {
           fontFamily: 'IBMPlexSans_500Medium',
@@ -28,48 +29,60 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
+          title: 'Home',
+          tabBarIcon: ({ color }) => (
+            <View style={styles.homeCircle}>
+              <House color={color} size={20} strokeWidth={1.75} />
+            </View>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="houses"
+        options={{
           title: 'Houses',
           tabBarIcon: ({ color }) => (
-            <House color={color} size={20} strokeWidth={1.75} />
+            <HousePlus color={color} size={20} strokeWidth={1.75} />
           ),
         }}
       />
       <Tabs.Screen
         name="cleaning"
         options={{
-          title: 'Cleaning',
-          tabBarIcon: ({ color }) => (
-            <CalendarCheck2 color={color} size={20} strokeWidth={1.75} />
-          ),
+          href: null,
         }}
       />
       <Tabs.Screen
         name="issues"
         options={{
-          title: 'Issues',
-          tabBarIcon: ({ color }) => (
-            <TriangleAlert color={color} size={20} strokeWidth={1.75} />
-          ),
+          href: null,
         }}
       />
       <Tabs.Screen
         name="notes"
         options={{
-          title: 'Notes',
-          tabBarIcon: ({ color }) => (
-            <NotebookPen color={color} size={20} strokeWidth={1.75} />
-          ),
+          href: null,
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
-          title: 'Settings',
-          tabBarIcon: ({ color }) => (
-            <Settings2 color={color} size={20} strokeWidth={1.75} />
-          ),
+          href: null,
         }}
       />
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  homeCircle: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    borderWidth: 1,
+    borderColor: colors.hairline,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.paperRaised,
+  },
+});
