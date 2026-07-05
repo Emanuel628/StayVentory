@@ -1,17 +1,14 @@
 import { useLocalSearchParams } from 'expo-router';
-import { ArrowLeft, Camera, CircleAlert, NotebookPen, Plus } from 'lucide-react-native';
+import { ArrowLeft, Plus } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { QuantityDots } from '@/src/components/QuantityDots';
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
 import { StatusStamp } from '@/src/components/StatusStamp';
 import {
   type InventoryRow,
-  getInstructionsByRoomId,
   getInventoryByRoomId,
-  getIssuesByRoomId,
   getRoomById,
 } from '@/src/data/mock';
 import { colors, radius, space, type } from '@/src/theme/theme';
@@ -23,8 +20,6 @@ function toIntegerText(value: string) {
 export default function RoomDetailScreen() {
   const params = useLocalSearchParams<{ id: string }>();
   const room = getRoomById(params.id ?? '');
-  const instructions = getInstructionsByRoomId(room.id);
-  const issues = getIssuesByRoomId(room.id);
   const [inventory, setInventory] = useState<InventoryRow[]>(() => getInventoryByRoomId(room.id));
   const [isAddingItem, setIsAddingItem] = useState(false);
   const [title, setTitle] = useState('');
@@ -79,7 +74,7 @@ export default function RoomDetailScreen() {
       <View style={styles.heroRow}>
         <View style={styles.heroText}>
           <Text style={styles.meta}>{room.meta}</Text>
-          <Text style={styles.meta}>Each room is its own page with inventory, notes, proof, and issue updates.</Text>
+          <Text style={styles.meta}>Each room is its own page with item-by-item inventory for the owner.</Text>
         </View>
         <StatusStamp status={room.status} />
       </View>
@@ -167,7 +162,9 @@ export default function RoomDetailScreen() {
                   </Text>
                 </View>
                 <View style={styles.inventoryRight}>
-                  <QuantityDots current={item.current} required={item.minRequired} />
+                  <Text style={styles.inventoryCount}>
+                    {item.current}/{item.minRequired}
+                  </Text>
                   <View style={styles.swipeCue}>
                     <Text style={styles.swipeCueText}>Swipe left</Text>
                     <ArrowLeft color={colors.inkMuted} size={14} strokeWidth={1.75} />
@@ -182,42 +179,6 @@ export default function RoomDetailScreen() {
             <Text style={styles.meta}>Tap + Add item to build this room inventory.</Text>
           </View>
         )}
-      </View>
-
-      <View style={styles.section}>
-        <SectionTitle>Property team actions</SectionTitle>
-        <View style={styles.noteBlock}>
-          <View style={styles.noteRow}>
-            <NotebookPen color={colors.teal} size={16} strokeWidth={1.75} />
-            <Text style={styles.body}>Add a note for the owner specific to this Airbnb.</Text>
-          </View>
-          <View style={styles.noteRow}>
-            <Camera color={colors.ochre} size={16} strokeWidth={1.75} />
-            <Text style={styles.body}>Upload or replace photos and videos before final submission.</Text>
-          </View>
-          <View style={styles.noteRow}>
-            <CircleAlert color={colors.rust} size={16} strokeWidth={1.75} />
-            <Text style={styles.body}>Report missing, damaged, or replacement-needed items.</Text>
-          </View>
-        </View>
-      </View>
-
-      <View style={styles.section}>
-        <SectionTitle>Instructions</SectionTitle>
-        {instructions.map((instruction) => (
-          <View key={instruction.id} style={styles.simpleRow}>
-            <Text style={styles.body}>{instruction.text}</Text>
-          </View>
-        ))}
-      </View>
-
-      <View style={styles.section}>
-        <SectionTitle>Open issues</SectionTitle>
-        {issues.map((issue) => (
-          <View key={issue.id} style={styles.simpleRow}>
-            <Text style={styles.body}>{issue.label}</Text>
-          </View>
-        ))}
       </View>
     </Screen>
   );
@@ -328,6 +289,10 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     gap: space.sm,
   },
+  inventoryCount: {
+    ...type.body,
+    color: colors.ink,
+  },
   description: {
     ...type.noteBody,
     color: colors.inkBody,
@@ -348,22 +313,6 @@ const styles = StyleSheet.create({
   meta: {
     ...type.bodySmallMuted,
     color: colors.inkBody,
-  },
-  noteBlock: {
-    backgroundColor: colors.paperRaised,
-    borderRadius: radius.control,
-    padding: space.md,
-    gap: space.md,
-  },
-  noteRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: space.sm,
-  },
-  simpleRow: {
-    paddingVertical: space.lg,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.hairline,
   },
   secondaryButton: {
     minHeight: 40,

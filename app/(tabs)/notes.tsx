@@ -11,7 +11,7 @@ const notes = [
   },
   {
     id: '2',
-    label: 'Property team note',
+    label: 'Team update',
     house: 'Cedar Retreat',
     body: 'Kitchen was fully restocked. Dish soap is low and should be added to the next supply run.',
   },
@@ -22,11 +22,11 @@ export default function NotesScreen() {
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <View style={styles.header}>
         <Text style={type.eyebrow}>Notes</Text>
-        <Text style={type.screenGreeting}>Short, useful context</Text>
+        <Text style={type.screenGreeting}>Owner notes and team updates</Text>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Latest notes</Text>
+        <Text style={styles.sectionTitle}>Latest updates</Text>
         {notes.map((note) => (
           <View key={note.id} style={styles.noteBlock}>
             <Text style={type.eyebrow}>{note.label}</Text>

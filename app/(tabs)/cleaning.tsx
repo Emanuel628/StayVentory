@@ -33,7 +33,7 @@ export default function CleaningScreen() {
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <View style={styles.header}>
         <Text style={type.eyebrow}>Cleaning</Text>
-        <Text style={type.screenGreeting}>Turnovers in motion</Text>
+        <Text style={type.screenGreeting}>Owner turnover view</Text>
       </View>
 
       <View style={styles.section}>
@@ -57,7 +57,7 @@ export default function CleaningScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Property team checklist preview</Text>
+        <Text style={styles.sectionTitle}>Cleaner checklist preview</Text>
         <View style={styles.noteBlock}>
           <Text style={type.eyebrow}>Primary bathroom</Text>
           {checklist.map((item) => (
@@ -90,7 +90,7 @@ export default function CleaningScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Proof requirement</Text>
+        <Text style={styles.sectionTitle}>Cleaner proof requirement</Text>
         <View style={styles.jobRow}>
           <View style={styles.rowLeft}>
             <View style={[styles.iconTile, { backgroundColor: colors.ochre }]}>
