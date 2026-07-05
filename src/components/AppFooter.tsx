@@ -26,12 +26,6 @@ const footerItems: FooterItem[] = [
     renderIcon: (color) => <CalendarCheck2 color={color} size={18} strokeWidth={1.75} />,
   },
   {
-    label: 'Issues',
-    href: '/issues',
-    matches: ['/issues'],
-    renderIcon: (color) => <TriangleAlert color={color} size={18} strokeWidth={1.75} />,
-  },
-  {
     label: 'Home',
     href: '/',
     matches: ['/'],
@@ -42,6 +36,12 @@ const footerItems: FooterItem[] = [
         </Svg>
       </View>
     ),
+  },
+  {
+    label: 'Issues',
+    href: '/issues',
+    matches: ['/issues'],
+    renderIcon: (color) => <TriangleAlert color={color} size={18} strokeWidth={1.75} />,
   },
   {
     label: 'Notes',
@@ -83,17 +83,18 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.hairline,
     minHeight: 92,
-    paddingTop: 10,
-    paddingBottom: 12,
+    paddingTop: 8,
+    paddingBottom: 8,
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'center',
     justifyContent: 'space-around',
   },
   item: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     gap: 4,
+    minHeight: 72,
   },
   label: {
     ...type.buttonLabel,
@@ -106,6 +107,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.teal,
-    marginTop: -4,
   },
 });
