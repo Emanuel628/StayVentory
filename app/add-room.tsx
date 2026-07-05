@@ -33,7 +33,7 @@ export default function AddRoomScreen() {
           <Pressable style={styles.inlineRow}>
             <View style={styles.inlineLeft}>
               <ImagePlus color={colors.teal} size={16} strokeWidth={1.75} />
-              <Text style={styles.inlineText}>Choose room SVG</Text>
+              <Text style={styles.inlineText}>Choose room icon</Text>
             </View>
             <ChevronRight color={colors.inkMuted} size={16} strokeWidth={1.75} />
           </Pressable>
