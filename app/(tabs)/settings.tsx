@@ -6,6 +6,7 @@ import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
 import { useAuth } from '@/src/providers/AuthProvider';
 import { deleteMyAccount, signOut } from '@/src/services/auth';
+import { isSupabaseConfigured } from '@/src/lib/env';
 import { colors, space, type } from '@/src/theme/theme';
 
 const rows: { label: string; href: Href }[] = [
@@ -34,7 +35,14 @@ export default function SettingsScreen() {
   const { user, role } = useAuth();
 
   const handleSignOut = async () => {
-    await signOut();
+    if (isSupabaseConfigured) {
+      try {
+        await signOut();
+      } catch {
+        // Fall through to local navigation so the preview flow still works.
+      }
+    }
+
     router.replace('/welcome');
   };
 
@@ -48,10 +56,25 @@ export default function SettingsScreen() {
           text: 'Delete account',
           style: 'destructive',
           onPress: async () => {
-            const { error } = await deleteMyAccount();
+            if (!isSupabaseConfigured) {
+              Alert.alert(
+                'Supabase not configured',
+                'Add EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_ANON_KEY before testing account deletion.',
+              );
+              return;
+            }
 
-            if (error) {
-              Alert.alert('Delete failed', error.message);
+            let errorMessage = '';
+
+            try {
+              const { error } = await deleteMyAccount();
+              errorMessage = error?.message ?? '';
+            } catch (error) {
+              errorMessage = error instanceof Error ? error.message : 'Delete failed.';
+            }
+
+            if (errorMessage) {
+              Alert.alert('Delete failed', errorMessage);
               return;
             }
 
