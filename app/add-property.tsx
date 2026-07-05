@@ -1,5 +1,4 @@
-import { Link } from 'expo-router';
-import { HousePlus, Plus, ShieldCheck } from 'lucide-react-native';
+import { HousePlus } from 'lucide-react-native';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Screen } from '@/src/components/Screen';
@@ -8,7 +7,7 @@ import { colors, radius, space, type } from '@/src/theme/theme';
 
 export default function AddPropertyScreen() {
   return (
-    <Screen eyebrow="Property" title="Add property">
+    <Screen eyebrow="Property" title="Add property" backHref="/houses" backLabel="Cancel">
       <View style={styles.section}>
         <SectionTitle>Property details</SectionTitle>
         <View style={styles.formField}>
@@ -33,33 +32,10 @@ export default function AddPropertyScreen() {
         </View>
       </View>
 
-      <View style={styles.section}>
-        <SectionTitle>Access and setup</SectionTitle>
-        <Link href="/give-access" asChild>
-          <Pressable style={styles.inlineRow}>
-            <View style={styles.inlineLeft}>
-              <ShieldCheck color={colors.teal} size={16} strokeWidth={1.75} />
-              <Text style={styles.inlineText}>Give access to property team</Text>
-            </View>
-            <Text style={styles.inlineAction}>Open</Text>
-          </Pressable>
-        </Link>
-
-        <Link href="/add-room" asChild>
-          <Pressable style={styles.inlineRow}>
-            <View style={styles.inlineLeft}>
-              <Plus color={colors.teal} size={16} strokeWidth={1.75} />
-              <Text style={styles.inlineText}>Add room</Text>
-            </View>
-            <Text style={styles.inlineAction}>Open</Text>
-          </Pressable>
-        </Link>
-      </View>
-
       <View style={styles.noteBlock}>
         <HousePlus color={colors.teal} size={18} strokeWidth={1.75} />
         <Text style={styles.noteText}>
-          Owners start by adding the property, then build rooms one by one and set room-specific inventory inside each room page.
+          Save the property first. After that, use the property page to add rooms and manage property team access.
         </Text>
       </View>
 
@@ -100,29 +76,6 @@ const styles = StyleSheet.create({
   },
   multilineInput: {
     minHeight: 88,
-  },
-  inlineRow: {
-    paddingVertical: space.lg,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.hairline,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: space.md,
-  },
-  inlineLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space.sm,
-    flex: 1,
-  },
-  inlineText: {
-    ...type.body,
-    color: colors.ink,
-  },
-  inlineAction: {
-    ...type.buttonLabel,
-    color: colors.teal,
   },
   noteBlock: {
     backgroundColor: colors.paperRaised,

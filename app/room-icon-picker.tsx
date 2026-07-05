@@ -18,7 +18,7 @@ const iconPalettes = [
 
 export default function RoomIconPickerScreen() {
   return (
-    <Screen eyebrow="Room icons" title="Choose room SVG">
+    <Screen eyebrow="Room icons" title="Choose room icon" backHref="/add-room" backLabel="Back to room">
       <View style={styles.section}>
         <SectionTitle>Available room types</SectionTitle>
         <Text style={styles.helpText}>

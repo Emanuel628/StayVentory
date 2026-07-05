@@ -6,7 +6,7 @@ export function LoginScreen() {
     <AuthShell
       eyebrow="Login"
       title="Sign in to StayVentory"
-      subtitle="Owners and property team members use different account paths, but both sign in from here."
+      subtitle="Owners and invited property team members sign in here after their account has been created."
       actions={[{ label: 'Sign in', href: '/' as const, primary: true }]}
       links={[
         { label: 'Forgot password', href: '/forgot-password' },

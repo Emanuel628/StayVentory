@@ -59,7 +59,7 @@ export const type = {
   noteBody: { fontFamily: fonts.bodyRegular, fontSize: 13, color: colors.inkBody, lineHeight: 19.5 },
   buttonLabel: { fontFamily: fonts.bodyMedium, fontSize: 13 },
   mono: { fontFamily: fonts.mono, fontSize: 12, letterSpacing: 0.3 },
-  stampLabel: { fontFamily: fonts.mono, fontSize: 9, letterSpacing: 0.3, lineHeight: 10 },
+  stampLabel: { fontFamily: fonts.mono, fontSize: 10, letterSpacing: 0.35, lineHeight: 11 },
 } as const;
 
 export const space = {
@@ -83,7 +83,7 @@ export const iconTile = {
 } as const;
 
 export const stamp = {
-  size: 46,
+  size: 54,
   strokeWidth: 1.5,
   dashArray: '3,2',
   rotationDeg: -8,

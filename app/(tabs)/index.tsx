@@ -104,15 +104,7 @@ export default function HomeScreen() {
       </View>
 
       <View style={styles.section}>
-        <View style={styles.sectionHeaderRow}>
-          <SectionTitle>Open issues</SectionTitle>
-          <Link href="/cleaners" asChild>
-            <Pressable style={styles.inlineLink}>
-              <ShieldCheck color={colors.teal} size={14} strokeWidth={1.75} />
-              <Text style={styles.inlineLinkLabel}>Property team access</Text>
-            </Pressable>
-          </Link>
-        </View>
+        <SectionTitle>Open issues</SectionTitle>
         {attentionIssues.map((issue) => (
           <View key={issue.id} style={styles.inlineRow}>
             <View style={styles.inlineLeft}>
@@ -126,18 +118,28 @@ export default function HomeScreen() {
           </View>
         ))}
       </View>
+
+      <View style={styles.section}>
+        <SectionTitle>Property team</SectionTitle>
+        <Link href="/cleaners" asChild>
+          <Pressable style={styles.inlineRow}>
+            <View style={styles.inlineLeft}>
+              <ShieldCheck color={colors.teal} size={16} strokeWidth={1.75} />
+              <View style={styles.rowText}>
+                <Text style={styles.body}>Review property team access</Text>
+                <Text style={styles.rowMeta}>Invite team members and control property access.</Text>
+              </View>
+            </View>
+            <ChevronRight color={colors.inkMuted} size={16} strokeWidth={1.75} />
+          </Pressable>
+        </Link>
+      </View>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
   section: {
-    gap: space.md,
-  },
-  sectionHeaderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     gap: space.md,
   },
   overviewRow: {
@@ -211,14 +213,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: space.sm,
     flex: 1,
-  },
-  inlineLink: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space.xs,
-  },
-  inlineLinkLabel: {
-    ...type.buttonLabel,
-    color: colors.teal,
   },
 });

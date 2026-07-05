@@ -7,7 +7,7 @@ import { colors, radius, space, type } from '@/src/theme/theme';
 
 export default function GiveAccessScreen() {
   return (
-    <Screen eyebrow="Access" title="Give property access">
+    <Screen eyebrow="Access" title="Give property access" backHref="/cleaners" backLabel="Back to team">
       <View style={styles.section}>
         <SectionTitle>Invite property team</SectionTitle>
         <View style={styles.formField}>
@@ -29,12 +29,12 @@ export default function GiveAccessScreen() {
             <KeyRound color={colors.teal} size={16} strokeWidth={1.75} />
             <Text style={styles.actionLabel}>Generate access code</Text>
           </View>
-          <Text style={styles.actionLink}>Run</Text>
+          <Text style={styles.actionLink}>Generate</Text>
         </View>
 
         <View style={styles.codeShelf}>
           <Text style={styles.codeLabel}>Generated code</Text>
-          <Text style={styles.codeValue}>LINDEN-4821-QX</Text>
+          <Text style={styles.codePlaceholder}>A new one-time code will appear here after you generate it.</Text>
         </View>
       </View>
 
@@ -113,10 +113,9 @@ const styles = StyleSheet.create({
     ...type.eyebrow,
     color: colors.inkMuted,
   },
-  codeValue: {
-    ...type.mono,
-    color: colors.teal,
-    fontSize: 14,
+  codePlaceholder: {
+    ...type.bodySmallMuted,
+    color: colors.inkBody,
   },
   noteBlock: {
     backgroundColor: colors.paperRaised,

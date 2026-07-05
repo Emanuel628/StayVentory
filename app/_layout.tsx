@@ -10,6 +10,7 @@ import {
 } from '@expo-google-fonts/ibm-plex-sans';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { Platform } from 'react-native';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
@@ -22,7 +23,9 @@ export const unstable_settings = {
   initialRouteName: '(tabs)',
 };
 
-SplashScreen.preventAutoHideAsync();
+if (Platform.OS !== 'web') {
+  SplashScreen.preventAutoHideAsync();
+}
 
 export default function RootLayout() {
   const [frauncesLoaded, frauncesError] = useFrauncesFonts({
@@ -35,7 +38,7 @@ export default function RootLayout() {
   const [monoLoaded, monoError] = useMonoFonts({
     IBMPlexMono_500Medium,
   });
-  const loaded = frauncesLoaded && sansLoaded && monoLoaded;
+  const loaded = Platform.OS === 'web' || (frauncesLoaded && sansLoaded && monoLoaded);
   const error = frauncesError ?? sansError ?? monoError;
 
   useEffect(() => {
@@ -43,7 +46,7 @@ export default function RootLayout() {
   }, [error]);
 
   useEffect(() => {
-    if (loaded) {
+    if (Platform.OS !== 'web' && loaded) {
       SplashScreen.hideAsync();
     }
   }, [loaded]);

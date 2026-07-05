@@ -15,7 +15,7 @@ export default function HouseDetailScreen() {
   const rooms = getRoomsByHouseId(house.id);
 
   return (
-    <Screen eyebrow="House" title={house.name}>
+    <Screen eyebrow="House" title={house.name} backHref="/houses" backLabel="Back to houses">
       <View style={styles.section}>
         <SectionTitle>Property overview</SectionTitle>
         <Text style={styles.meta}>{house.address}</Text>
@@ -25,10 +25,12 @@ export default function HouseDetailScreen() {
       <View style={styles.section}>
         <View style={styles.rowBetween}>
           <SectionTitle>Rooms</SectionTitle>
-          <View style={styles.inlineAction}>
-            <Plus color={colors.teal} size={14} strokeWidth={1.75} />
-            <Text style={styles.inlineActionLabel}>Add room</Text>
-          </View>
+          <Link href="/add-room" asChild>
+            <Pressable style={styles.inlineAction}>
+              <Plus color={colors.teal} size={14} strokeWidth={1.75} />
+              <Text style={styles.inlineActionLabel}>Add room</Text>
+            </Pressable>
+          </Link>
         </View>
         {rooms.map((room) => {
           const tileColor =

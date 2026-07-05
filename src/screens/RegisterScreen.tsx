@@ -11,7 +11,7 @@ export function RegisterScreen() {
       title="Create owner account"
       subtitle="Set up your account first, then add houses, rooms, room standards, and property team access."
       actions={[{ label: 'Create account', href: '/' as const, primary: true }]}
-      links={[{ label: 'Already have an account? Sign in', href: '/login' }]}>
+      links={[{ label: 'Sign in', href: '/login' }]}>
       <AuthField label="Full name" value="Emanuel Castro" />
       <AuthField label="Email" value="owner@stayventory.co" />
       <AuthField label="Password" value="Create a secure password" />

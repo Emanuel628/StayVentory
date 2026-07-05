@@ -1,5 +1,6 @@
-import { KeyRound, Mail, ShieldCheck, UserRound } from 'lucide-react-native';
-import { StyleSheet, Text, View } from 'react-native';
+import { Link } from 'expo-router';
+import { ChevronRight, KeyRound, Mail, ShieldCheck, UserRound } from 'lucide-react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
@@ -32,13 +33,18 @@ export function CleanerAccessScreen() {
               <UserRound color={colors.inkMuted} size={14} strokeWidth={1.75} />
               <Text style={styles.meta}>{cleaner.username}</Text>
             </View>
-            <View style={styles.detailRow}>
-              <KeyRound color={colors.teal} size={14} strokeWidth={1.75} />
-              <Text style={styles.meta}>Generate Access Code</Text>
-            </View>
+            <Link href="/give-access" asChild>
+              <Pressable style={styles.linkRow}>
+                <View style={styles.detailRow}>
+                  <KeyRound color={colors.teal} size={14} strokeWidth={1.75} />
+                  <Text style={styles.linkText}>Generate access code</Text>
+                </View>
+                <ChevronRight color={colors.inkMuted} size={16} strokeWidth={1.75} />
+              </Pressable>
+            </Link>
             <View style={styles.codeShelf}>
-              <Text style={styles.codeLabel}>Generated code appears here</Text>
-              <Text style={styles.code}>{cleaner.code}</Text>
+              <Text style={styles.codeLabel}>Active one-time code</Text>
+              <Text style={styles.codePlaceholder}>No active code yet.</Text>
             </View>
             <View style={styles.detailRow}>
               <ShieldCheck color={colors.ochre} size={14} strokeWidth={1.75} />
@@ -75,6 +81,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: space.xs,
   },
+  linkRow: {
+    paddingVertical: space.xs,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: space.md,
+  },
+  linkText: {
+    ...type.buttonLabel,
+    color: colors.teal,
+  },
   meta: {
     ...type.bodySmallMuted,
     color: colors.inkBody,
@@ -90,9 +107,8 @@ const styles = StyleSheet.create({
     ...type.eyebrow,
     color: colors.inkMuted,
   },
-  code: {
-    ...type.mono,
-    color: colors.teal,
-    fontSize: 13,
+  codePlaceholder: {
+    ...type.bodySmallMuted,
+    color: colors.inkBody,
   },
 });

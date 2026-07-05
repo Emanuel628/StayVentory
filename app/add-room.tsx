@@ -8,7 +8,7 @@ import { colors, radius, space, type } from '@/src/theme/theme';
 
 export default function AddRoomScreen() {
   return (
-    <Screen eyebrow="Room" title="Add room">
+    <Screen eyebrow="Room" title="Add room" backHref={{ pathname: '/houses/[id]', params: { id: 'linden-house' } }} backLabel="Back to house">
       <View style={styles.section}>
         <SectionTitle>Room details</SectionTitle>
         <View style={styles.formField}>

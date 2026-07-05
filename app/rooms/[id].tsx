@@ -17,7 +17,11 @@ export default function RoomDetailScreen() {
   const issues = getIssuesByRoomId(room.id);
 
   return (
-    <Screen eyebrow="Room" title={room.name}>
+    <Screen
+      eyebrow="Room"
+      title={room.name}
+      backHref={{ pathname: '/houses/[id]', params: { id: room.houseId } }}
+      backLabel="Back to house">
       <View style={styles.heroRow}>
         <View style={styles.heroText}>
           <Text style={styles.meta}>{room.meta}</Text>
