@@ -21,6 +21,22 @@ export async function signInWithPassword(email: string, password: string) {
   return supabase.auth.signInWithPassword({ email, password });
 }
 
+export async function ensureMyProfile(input: {
+  role: AppRole;
+  email?: string | null;
+  displayName?: string | null;
+  username?: string | null;
+}) {
+  const supabase = requireSupabase() as any;
+
+  return supabase.rpc('ensure_my_profile', {
+    profile_role: input.role,
+    profile_email: input.email ?? null,
+    profile_display_name: input.displayName ?? null,
+    profile_username: input.username ?? null,
+  });
+}
+
 export async function emailExistsForSignup(email: string) {
   const supabase = requireSupabase() as any;
   return supabase.rpc('email_exists_for_signup', { target_email: email });

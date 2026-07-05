@@ -4,6 +4,7 @@ import type { Session, User } from '@supabase/supabase-js';
 import { isSupabaseConfigured } from '@/src/lib/env';
 import { getSupabaseClient } from '@/src/lib/supabase/client';
 import type { Database } from '@/src/lib/supabase/database.types';
+import { ensureMyProfile } from '@/src/services/auth';
 
 type AppRole = Database['public']['Enums']['app_role'];
 
@@ -40,6 +41,23 @@ async function readRole(userId: string): Promise<AppRole | null> {
   return (data?.role as AppRole | undefined) ?? null;
 }
 
+async function ensureProfileFromSessionUser(user: User) {
+  const metadataRole = user.user_metadata.role as AppRole | undefined;
+
+  if (!metadataRole) {
+    return null;
+  }
+
+  await ensureMyProfile({
+    role: metadataRole,
+    email: user.email ?? null,
+    displayName: (user.user_metadata.display_name as string | undefined) ?? (user.user_metadata.full_name as string | undefined) ?? null,
+    username: (user.user_metadata.username as string | undefined) ?? null,
+  });
+
+  return readRole(user.id);
+}
+
 export function AuthProvider({ children }: PropsWithChildren) {
   const [status, setStatus] = useState<AuthStatus>(isSupabaseConfigured ? 'loading' : 'unconfigured');
   const [session, setSession] = useState<Session | null>(null);
@@ -60,7 +78,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
         supabase.auth.getSession(),
         (async () => {
           const currentSession = (await supabase.auth.getSession()).data.session;
-          return currentSession?.user.id ? readRole(currentSession.user.id) : null;
+          return currentSession?.user ? ensureProfileFromSessionUser(currentSession.user) : null;
         })(),
       ]);
 
@@ -80,7 +98,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       setStatus(nextSession ? 'authenticated' : 'signed_out');
 
       if (nextSession?.user.id) {
-        void readRole(nextSession.user.id).then((nextRole) => {
+        void ensureProfileFromSessionUser(nextSession.user).then((nextRole) => {
           if (isMounted) {
             setRole(nextRole);
           }
@@ -114,7 +132,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
         const { data } = await supabase.auth.getSession();
         setSession(data.session);
         setStatus(data.session ? 'authenticated' : 'signed_out');
-        setRole(data.session?.user.id ? await readRole(data.session.user.id) : null);
+        setRole(data.session?.user ? await ensureProfileFromSessionUser(data.session.user) : null);
       },
     }),
     [role, session, status],

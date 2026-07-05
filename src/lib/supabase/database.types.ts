@@ -371,6 +371,15 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      ensure_my_profile: {
+        Args: {
+          profile_role: Database['public']['Enums']['app_role'];
+          profile_email?: string | null;
+          profile_display_name?: string | null;
+          profile_username?: string | null;
+        };
+        Returns: Database['public']['Tables']['profiles']['Row'];
+      };
       email_exists_for_signup: {
         Args: { target_email: string };
         Returns: boolean;

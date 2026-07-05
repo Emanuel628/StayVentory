@@ -1,23 +1,33 @@
 import { useRouter } from 'expo-router';
-import { HousePlus } from 'lucide-react-native';
+import { ChevronDown, HousePlus } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
 import { useAuth } from '@/src/providers/AuthProvider';
+import { ensureMyProfile } from '@/src/services/auth';
 import { createHouse } from '@/src/services/houses';
 import { colors, radius, space, type } from '@/src/theme/theme';
 
+const US_STATES = [
+  'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA',
+  'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD',
+  'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ',
+  'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC',
+  'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY',
+] as const;
+
 export default function AddPropertyScreen() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   const [name, setName] = useState('');
   const [addressLine1, setAddressLine1] = useState('');
   const [addressLine2, setAddressLine2] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [postalCode, setPostalCode] = useState('');
+  const [isStatePickerOpen, setIsStatePickerOpen] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -35,6 +45,13 @@ export default function AddPropertyScreen() {
     try {
       setError('');
       setIsSubmitting(true);
+
+      await ensureMyProfile({
+        role: role ?? ((user.user_metadata.role as 'owner' | 'cleaner' | undefined) ?? 'owner'),
+        email: user.email ?? null,
+        displayName: (user.user_metadata.display_name as string | undefined) ?? null,
+        username: (user.user_metadata.username as string | undefined) ?? null,
+      });
 
       const { data, error: createError } = await createHouse({
         ownerUserId: user.id,
@@ -106,21 +123,17 @@ export default function AddPropertyScreen() {
           </View>
           <View style={[styles.formField, styles.stateField]}>
             <Text style={styles.fieldLabel}>State</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="FL"
-              placeholderTextColor={colors.inkMuted}
-              autoCapitalize="characters"
-              value={state}
-              onChangeText={setState}
-            />
+            <Pressable
+              style={styles.selectInput}
+              onPress={() => setIsStatePickerOpen((current) => !current)}>
+              <Text style={state ? styles.selectValue : styles.selectPlaceholder}>{state || 'Select'}</Text>
+              <ChevronDown color={colors.inkMuted} size={16} strokeWidth={1.75} />
+            </Pressable>
           </View>
           <View style={[styles.formField, styles.zipField]}>
             <Text style={styles.fieldLabel}>ZIP</Text>
             <TextInput
               style={styles.input}
-              placeholder="33602"
-              placeholderTextColor={colors.inkMuted}
               keyboardType="number-pad"
               inputMode="numeric"
               value={postalCode}
@@ -128,6 +141,23 @@ export default function AddPropertyScreen() {
             />
           </View>
         </View>
+        {isStatePickerOpen ? (
+          <View style={styles.statePicker}>
+            {US_STATES.map((abbreviation) => (
+              <Pressable
+                key={abbreviation}
+                style={[styles.stateOption, state === abbreviation ? styles.stateOptionSelected : null]}
+                onPress={() => {
+                  setState(abbreviation);
+                  setIsStatePickerOpen(false);
+                }}>
+                <Text style={[styles.stateOptionLabel, state === abbreviation ? styles.stateOptionLabelSelected : null]}>
+                  {abbreviation}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        ) : null}
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
       </View>
 
@@ -186,6 +216,53 @@ const styles = StyleSheet.create({
     backgroundColor: colors.paper,
     ...type.body,
     color: colors.inkBody,
+  },
+  selectInput: {
+    minHeight: 44,
+    borderRadius: radius.control,
+    borderWidth: 1,
+    borderColor: colors.hairline,
+    paddingHorizontal: space.md,
+    backgroundColor: colors.paper,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: space.sm,
+  },
+  selectValue: {
+    ...type.body,
+    color: colors.inkBody,
+  },
+  selectPlaceholder: {
+    ...type.body,
+    color: colors.inkMuted,
+  },
+  statePicker: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: space.sm,
+  },
+  stateOption: {
+    minWidth: 52,
+    minHeight: 36,
+    borderRadius: radius.control,
+    borderWidth: 1,
+    borderColor: colors.hairline,
+    backgroundColor: colors.paper,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: space.sm,
+  },
+  stateOptionSelected: {
+    borderColor: colors.teal,
+    backgroundColor: colors.teal,
+  },
+  stateOptionLabel: {
+    ...type.bodySmallMuted,
+    color: colors.ink,
+  },
+  stateOptionLabelSelected: {
+    color: colors.buttonPrimaryText,
   },
   noteBlock: {
     backgroundColor: colors.paperRaised,
