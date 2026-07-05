@@ -1,6 +1,7 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { CalendarCheck2, Camera, CheckSquare2 } from 'lucide-react-native';
 
+import { Screen } from '@/src/components/Screen';
 import { StatusStamp } from '@/src/components/StatusStamp';
 import { colors, iconTile, radius, space, type } from '@/src/theme/theme';
 
@@ -29,12 +30,7 @@ const checklist = [
 
 export default function CleaningScreen() {
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
-      <View style={styles.header}>
-        <Text style={type.eyebrow}>Cleaning</Text>
-        <Text style={type.screenGreeting}>Owner turnover view</Text>
-      </View>
-
+    <Screen eyebrow="Cleaning" title="Owner turnover view">
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Today&apos;s jobs</Text>
         {jobs.map((job) => (
@@ -96,24 +92,11 @@ export default function CleaningScreen() {
           </View>
         </View>
       </View>
-    </ScrollView>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.paper,
-  },
-  content: {
-    paddingHorizontal: space.xl,
-    paddingTop: space.lg,
-    paddingBottom: 96,
-    gap: 28,
-  },
-  header: {
-    gap: space.xs,
-  },
   section: {
     gap: space.md,
   },

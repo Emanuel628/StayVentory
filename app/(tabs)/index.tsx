@@ -68,19 +68,19 @@ const restockNow = [
     id: 'tp',
     item: 'Toilet paper',
     amount: 'Need 2 more',
-    location: 'The Linden House • Primary Bathroom',
+    location: 'The Linden House | Primary Bathroom',
   },
   {
     id: 'detergent',
     item: 'Laundry detergent',
     amount: 'Need 2 more',
-    location: 'Cedar Retreat • Laundry Room',
+    location: 'Cedar Retreat | Laundry Room',
   },
   {
     id: 'hand-soap',
     item: 'Hand soap backup',
     amount: 'Need 1 more',
-    location: 'The Linden House • Primary Bathroom',
+    location: 'The Linden House | Primary Bathroom',
   },
 ];
 
@@ -218,7 +218,7 @@ export default function HomeScreen() {
               <AlertTriangle color={colors.rust} size={16} strokeWidth={1.75} />
               <View style={styles.rowText}>
                 <Text style={styles.body}>Lamp switch broken</Text>
-                <Text style={styles.rowMeta}>The Linden House • Living Room</Text>
+                <Text style={styles.rowMeta}>The Linden House | Living Room</Text>
               </View>
             </View>
             <ChevronRight color={colors.inkMuted} size={16} strokeWidth={1.75} />
@@ -236,7 +236,7 @@ export default function HomeScreen() {
                 <View style={styles.rowText}>
                   <Text style={styles.body}>{item.item}</Text>
                   <Text style={styles.rowMeta}>
-                    {item.amount} • {item.location}
+                    {item.amount} | {item.location}
                   </Text>
                 </View>
               </View>
@@ -390,3 +390,4 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+

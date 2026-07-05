@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
-import { Href, Link } from 'expo-router';
-import { ChevronLeft } from 'lucide-react-native';
+import { Href, Link, usePathname } from 'expo-router';
+import { ChevronLeft, Settings2 } from 'lucide-react-native';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { colors, space, type } from '@/src/theme/theme';
@@ -12,9 +12,31 @@ type ScreenProps = {
   backHref?: Href;
   backLabel?: string;
   headerRight?: ReactNode;
+  showSettingsLink?: boolean;
 };
 
-export function Screen({ eyebrow, title, children, backHref, backLabel = 'Back', headerRight }: ScreenProps) {
+export function Screen({
+  eyebrow,
+  title,
+  children,
+  backHref,
+  backLabel = 'Back',
+  headerRight,
+  showSettingsLink = true,
+}: ScreenProps) {
+  const pathname = usePathname();
+  const shouldShowSettingsLink = showSettingsLink && pathname !== '/settings' && pathname !== '/team-workspace';
+  const resolvedHeaderRight =
+    headerRight ??
+    (shouldShowSettingsLink ? (
+      <Link href="/settings" asChild>
+        <Pressable style={styles.settingsLink}>
+          <Settings2 color={colors.teal} size={16} strokeWidth={1.75} />
+          <Text style={styles.settingsLabel}>Settings</Text>
+        </Pressable>
+      </Link>
+    ) : null);
+
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <View style={styles.header}>
@@ -26,12 +48,12 @@ export function Screen({ eyebrow, title, children, backHref, backLabel = 'Back',
                 <Text style={styles.backLabel}>{backLabel}</Text>
               </Pressable>
             </Link>
-            {headerRight}
+            {resolvedHeaderRight}
           </View>
-        ) : headerRight ? (
+        ) : resolvedHeaderRight ? (
           <View style={styles.headerTopRow}>
             <View />
-            {headerRight}
+            {resolvedHeaderRight}
           </View>
         ) : null}
         <Text style={type.eyebrow}>{eyebrow}</Text>
@@ -70,6 +92,16 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   backLabel: {
+    ...type.buttonLabel,
+    color: colors.teal,
+  },
+  settingsLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.xs,
+    alignSelf: 'flex-start',
+  },
+  settingsLabel: {
     ...type.buttonLabel,
     color: colors.teal,
   },

@@ -1,6 +1,7 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Wrench, AlertTriangle, PackageX } from 'lucide-react-native';
 
+import { Screen } from '@/src/components/Screen';
 import { colors, iconTile, radius, space, type } from '@/src/theme/theme';
 
 const issues = [
@@ -38,12 +39,7 @@ const issues = [
 
 export default function IssuesScreen() {
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
-      <View style={styles.header}>
-        <Text style={type.eyebrow}>Issues</Text>
-        <Text style={type.screenGreeting}>Repair, maintain, replace</Text>
-      </View>
-
+    <Screen eyebrow="Issues" title="Repair, maintain, replace">
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Open items</Text>
         {issues.map((issue) => {
@@ -57,7 +53,7 @@ export default function IssuesScreen() {
                 <View style={styles.rowText}>
                   <Text style={styles.rowName}>{issue.title}</Text>
                   <Text style={styles.rowMeta}>
-                    {issue.house} • {issue.room}
+                    {issue.house} | {issue.room}
                   </Text>
                 </View>
               </View>
@@ -66,24 +62,11 @@ export default function IssuesScreen() {
           );
         })}
       </View>
-    </ScrollView>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.paper,
-  },
-  content: {
-    paddingHorizontal: space.xl,
-    paddingTop: space.lg,
-    paddingBottom: 96,
-    gap: 28,
-  },
-  header: {
-    gap: space.xs,
-  },
   section: {
     gap: space.md,
   },
@@ -131,3 +114,4 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
 });
+

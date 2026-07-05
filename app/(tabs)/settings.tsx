@@ -1,4 +1,4 @@
-import { Href, Link, useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { ChevronRight } from 'lucide-react-native';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -8,14 +8,6 @@ import { useAuth } from '@/src/providers/AuthProvider';
 import { deleteMyAccount, signOut } from '@/src/services/auth';
 import { isSupabaseConfigured } from '@/src/lib/env';
 import { colors, space, type } from '@/src/theme/theme';
-
-const rows: { label: string; href: Href }[] = [
-  { label: 'Profile', href: '/settings' },
-  { label: 'House playbook', href: '/settings' },
-  { label: 'Property team access', href: '/cleaners' },
-  { label: 'Notifications', href: '/settings' },
-  { label: 'Design lock', href: '/settings' },
-];
 
 export default function SettingsScreen() {
   const router = useRouter();
@@ -96,21 +88,22 @@ export default function SettingsScreen() {
             <Text style={styles.destructiveActionLabel}>Delete account</Text>
           </Pressable>
         </View>
-        {rows.map((row) => (
-          <Link key={row.label} href={row.href} asChild>
-            <Pressable style={styles.settingRow}>
-              <Text style={styles.settingLabel}>{row.label}</Text>
-              <ChevronRight color={colors.inkMuted} size={18} strokeWidth={1.75} />
-            </Pressable>
-          </Link>
-        ))}
       </View>
 
       <View style={styles.section}>
-        <SectionTitle>Property team model</SectionTitle>
+        <SectionTitle>Manage</SectionTitle>
+        <Link href="/cleaners" asChild>
+          <Pressable style={styles.settingRow}>
+            <Text style={styles.settingLabel}>Property team access</Text>
+            <ChevronRight color={colors.inkMuted} size={18} strokeWidth={1.75} />
+          </Pressable>
+        </Link>
+      </View>
+
+      <View style={styles.section}>
+        <SectionTitle>Design lock</SectionTitle>
         <Text style={styles.helpText}>
-          Owners invite property team members, limit access by property, and share one-time codes. They never see
-          unassigned properties.
+          The app stays restrained on purpose: single-column layouts, plain lists, direct labels, and minimal card use.
         </Text>
       </View>
     </Screen>

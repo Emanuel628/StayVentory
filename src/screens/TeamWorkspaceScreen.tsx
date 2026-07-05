@@ -26,7 +26,7 @@ const workspaceInstructions = roomInstructions.slice(0, 3);
 
 export function TeamWorkspaceScreen() {
   return (
-    <Screen eyebrow="Property Team" title="Assigned work">
+    <Screen eyebrow="Property Team" title="Assigned work" showSettingsLink={false}>
       <View style={styles.section}>
         <SectionTitle>What needs your attention</SectionTitle>
         {assignedJobs.map((job) => (

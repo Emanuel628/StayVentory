@@ -52,7 +52,13 @@ const footerItems: FooterItem[] = [
 ];
 
 function isActivePath(pathname: string, matches: string[]) {
-  return matches.some((match) => pathname === match || pathname.startsWith(match));
+  return matches.some((match) => {
+    if (match === '/') {
+      return pathname === '/';
+    }
+
+    return pathname === match || pathname.startsWith(match);
+  });
 }
 
 export function AppFooter() {

@@ -1,5 +1,6 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { Screen } from '@/src/components/Screen';
 import { colors, radius, space, type } from '@/src/theme/theme';
 
 const notes = [
@@ -19,12 +20,7 @@ const notes = [
 
 export default function NotesScreen() {
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
-      <View style={styles.header}>
-        <Text style={type.eyebrow}>Notes</Text>
-        <Text style={type.screenGreeting}>Owner notes and team updates</Text>
-      </View>
-
+    <Screen eyebrow="Notes" title="Owner notes and team updates">
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Latest updates</Text>
         {notes.map((note) => (
@@ -35,24 +31,11 @@ export default function NotesScreen() {
           </View>
         ))}
       </View>
-    </ScrollView>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.paper,
-  },
-  content: {
-    paddingHorizontal: space.xl,
-    paddingTop: space.lg,
-    paddingBottom: 96,
-    gap: 28,
-  },
-  header: {
-    gap: space.xs,
-  },
   section: {
     gap: space.md,
   },
