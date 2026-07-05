@@ -10,10 +10,11 @@ import {
 } from '@expo-google-fonts/ibm-plex-sans';
 import { Stack, usePathname, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { Platform } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
+import { AppFooter } from '@/src/components/AppFooter';
 import { AuthProvider, useAuth } from '@/src/providers/AuthProvider';
 
 export {
@@ -72,13 +73,14 @@ function AppShell() {
   const router = useRouter();
   const pathname = usePathname();
   const { status, isConfigured } = useAuth();
+  const publicPaths = new Set(['/welcome', '/login', '/register', '/forgot-password', '/team-register']);
+  const showFooter = !publicPaths.has(pathname) && pathname !== '/+not-found';
 
   useEffect(() => {
     if (!isConfigured || status === 'loading') {
       return;
     }
 
-    const publicPaths = new Set(['/welcome', '/login', '/register', '/forgot-password', '/team-register']);
     const isPublicPath = publicPaths.has(pathname);
 
     if (status === 'signed_out' && !isPublicPath) {
@@ -96,22 +98,37 @@ function AppShell() {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="welcome" />
-      <Stack.Screen name="login" />
-      <Stack.Screen name="register" />
-      <Stack.Screen name="forgot-password" />
-      <Stack.Screen name="team-register" />
-      <Stack.Screen name="team-workspace" />
-      <Stack.Screen name="add-property" />
-      <Stack.Screen name="add-room" />
-      <Stack.Screen name="room-icon-picker" />
-      <Stack.Screen name="give-access" />
-      <Stack.Screen name="houses/[id]" />
-      <Stack.Screen name="rooms/[id]" />
-      <Stack.Screen name="cleaners" />
-      <Stack.Screen name="+not-found" />
-    </Stack>
+    <View style={styles.shell}>
+      <View style={styles.stackWrap}>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="welcome" />
+          <Stack.Screen name="login" />
+          <Stack.Screen name="register" />
+          <Stack.Screen name="forgot-password" />
+          <Stack.Screen name="team-register" />
+          <Stack.Screen name="team-workspace" />
+          <Stack.Screen name="add-property" />
+          <Stack.Screen name="add-room" />
+          <Stack.Screen name="room-icon-picker" />
+          <Stack.Screen name="give-access" />
+          <Stack.Screen name="houses/[id]" />
+          <Stack.Screen name="rooms/[id]" />
+          <Stack.Screen name="cleaners" />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      </View>
+      {showFooter ? <AppFooter /> : null}
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  shell: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
+  stackWrap: {
+    flex: 1,
+  },
+});
