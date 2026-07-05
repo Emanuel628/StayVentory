@@ -63,18 +63,13 @@ export async function createHouse(input: {
 }) {
   const supabase = requireSupabase();
 
-  return supabase
-    .from('houses')
-    .insert({
-      owner_user_id: input.ownerUserId,
-      name: input.name,
-      address_line_1: input.addressLine1,
-      address_line_2: input.addressLine2 ?? null,
-      city: input.city,
-      state: input.state,
-      postal_code: input.postalCode,
-      country: input.country ?? 'US',
-    })
-    .select()
-    .single();
+  return supabase.rpc('create_house', {
+    property_name: input.name,
+    property_address_line_1: input.addressLine1,
+    property_address_line_2: input.addressLine2 ?? null,
+    property_city: input.city,
+    property_state: input.state,
+    property_postal_code: input.postalCode,
+    property_country: input.country ?? 'US',
+  });
 }

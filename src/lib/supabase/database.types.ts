@@ -371,6 +371,18 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      create_house: {
+        Args: {
+          property_name: string;
+          property_address_line_1: string;
+          property_address_line_2?: string | null;
+          property_city: string;
+          property_state: string;
+          property_postal_code: string;
+          property_country?: string | null;
+        };
+        Returns: Database['public']['Tables']['houses']['Row'];
+      };
       ensure_my_profile: {
         Args: {
           profile_role: Database['public']['Enums']['app_role'];
