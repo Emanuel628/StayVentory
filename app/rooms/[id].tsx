@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import { ArrowLeft, Plus } from 'lucide-react-native';
+import { Plus } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -55,7 +55,7 @@ export default function RoomDetailScreen() {
         current: minRequired,
         minRequired,
         maxPar,
-        storage: 'Storage note not added yet',
+        storage: '',
       },
     ]);
     setTitle('');
@@ -150,13 +150,12 @@ export default function RoomDetailScreen() {
         ) : null}
         {inventory.length ? (
           <>
-            <Text style={styles.swipeHint}>Swipe left on an item to edit or delete.</Text>
             {inventory.map((item) => (
               <View key={item.id} style={styles.inventoryRow}>
                 <View style={styles.inventoryText}>
                   <Text style={styles.body}>{item.name}</Text>
                   {item.description ? <Text style={styles.description}>{item.description}</Text> : null}
-                  <Text style={styles.meta}>{item.storage}</Text>
+                  {item.storage ? <Text style={styles.meta}>{item.storage}</Text> : null}
                   <Text style={styles.meta}>
                     Min {item.minRequired} | Max {item.maxPar}
                   </Text>
@@ -165,10 +164,6 @@ export default function RoomDetailScreen() {
                   <Text style={styles.inventoryCount}>
                     {item.current}/{item.minRequired}
                   </Text>
-                  <View style={styles.swipeCue}>
-                    <Text style={styles.swipeCueText}>Swipe left</Text>
-                    <ArrowLeft color={colors.inkMuted} size={14} strokeWidth={1.75} />
-                  </View>
                 </View>
               </View>
             ))}
@@ -268,10 +263,6 @@ const styles = StyleSheet.create({
     padding: space.md,
     gap: space.xs,
   },
-  swipeHint: {
-    ...type.bodySmallMuted,
-    color: colors.inkBody,
-  },
   inventoryRow: {
     paddingVertical: space.lg,
     borderBottomWidth: 1,
@@ -287,7 +278,7 @@ const styles = StyleSheet.create({
   },
   inventoryRight: {
     alignItems: 'flex-end',
-    gap: space.sm,
+    justifyContent: 'center',
   },
   inventoryCount: {
     ...type.body,
@@ -296,15 +287,6 @@ const styles = StyleSheet.create({
   description: {
     ...type.noteBody,
     color: colors.inkBody,
-  },
-  swipeCue: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space.xs,
-  },
-  swipeCueText: {
-    ...type.bodySmallMuted,
-    color: colors.inkMuted,
   },
   body: {
     ...type.body,

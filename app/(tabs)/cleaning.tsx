@@ -1,7 +1,6 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { CalendarCheck2, Camera, CheckSquare2 } from 'lucide-react-native';
 
-import { QuantityDots } from '@/src/components/QuantityDots';
 import { StatusStamp } from '@/src/components/StatusStamp';
 import { colors, iconTile, radius, space, type } from '@/src/theme/theme';
 
@@ -37,7 +36,7 @@ export default function CleaningScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Today's jobs</Text>
+        <Text style={styles.sectionTitle}>Today&apos;s jobs</Text>
         {jobs.map((job) => (
           <View key={job.id} style={styles.jobRow}>
             <View style={styles.rowLeft}>
@@ -47,7 +46,7 @@ export default function CleaningScreen() {
               <View style={styles.rowText}>
                 <Text style={styles.rowName}>{job.house}</Text>
                 <Text style={styles.rowMeta}>
-                  {job.date} • {job.cleaner}
+                  {job.date} | {job.cleaner}
                 </Text>
               </View>
             </View>
@@ -63,16 +62,10 @@ export default function CleaningScreen() {
           {checklist.map((item) => (
             <View key={item.label} style={styles.checklistRow}>
               <View style={styles.checklistLeft}>
-                <CheckSquare2
-                  color={item.done ? colors.teal : colors.inkMuted}
-                  size={18}
-                  strokeWidth={1.75}
-                />
+                <CheckSquare2 color={item.done ? colors.teal : colors.inkMuted} size={18} strokeWidth={1.75} />
                 <Text style={styles.checklistLabel}>{item.label}</Text>
               </View>
-              <Text style={[type.bodySmallMuted, item.done ? styles.successMeta : null]}>
-                {item.done ? 'Done' : 'Open'}
-              </Text>
+              <Text style={[type.bodySmallMuted, item.done ? styles.successMeta : null]}>{item.done ? 'Done' : 'Open'}</Text>
             </View>
           ))}
         </View>
@@ -82,10 +75,10 @@ export default function CleaningScreen() {
         <Text style={styles.sectionTitle}>Restock snapshot</Text>
         <View style={styles.inlineRow}>
           <View style={styles.rowText}>
-            <Text style={styles.inventoryName}>Bathroom 1 • Toilet paper</Text>
-            <Text style={styles.rowMeta}>Minimum required stock</Text>
+            <Text style={styles.inventoryName}>Bathroom 1 | Toilet paper</Text>
+            <Text style={styles.rowMeta}>4 on hand | minimum 6 required</Text>
           </View>
-          <QuantityDots current={4} required={6} />
+          <Text style={styles.restockCount}>4/6</Text>
         </View>
       </View>
 
@@ -161,6 +154,7 @@ const styles = StyleSheet.create({
   },
   rowMeta: {
     ...type.bodySmallMuted,
+    color: colors.inkBody,
   },
   noteBlock: {
     backgroundColor: colors.paperRaised,
@@ -184,6 +178,7 @@ const styles = StyleSheet.create({
   checklistLabel: {
     ...type.body,
     flex: 1,
+    color: colors.ink,
   },
   successMeta: {
     color: colors.teal,
@@ -200,5 +195,9 @@ const styles = StyleSheet.create({
   inventoryName: {
     ...type.body,
     color: colors.ink,
+  },
+  restockCount: {
+    ...type.mono,
+    color: colors.rust,
   },
 });

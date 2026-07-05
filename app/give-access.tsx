@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { KeyRound, Mail, ShieldCheck } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -8,22 +9,39 @@ import { formatRetryAfter, getRateLimitState, recordRateLimitHit } from '@/src/s
 import { colors, radius, space, type } from '@/src/theme/theme';
 
 export default function GiveAccessScreen() {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
   const [generatedCode, setGeneratedCode] = useState('');
   const [expiresAt, setExpiresAt] = useState<number | null>(null);
   const [helperText, setHelperText] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [timeRemainingLabel, setTimeRemainingLabel] = useState('');
 
   useEffect(() => {
     if (!expiresAt) {
+      setTimeRemainingLabel('');
       return;
     }
 
-    const timer = setInterval(() => {
-      if (Date.now() >= expiresAt) {
+    const updateTimeRemaining = () => {
+      const remainingMs = Math.max(0, expiresAt - Date.now());
+
+      if (!remainingMs) {
         setGeneratedCode('');
         setExpiresAt(null);
+        setTimeRemainingLabel('');
         setHelperText('Code expired. Generate a new one to continue.');
+        return;
       }
+
+      const remainingMinutes = Math.ceil(remainingMs / 60000);
+      setTimeRemainingLabel(`Expires in about ${remainingMinutes} minute${remainingMinutes === 1 ? '' : 's'}.`);
+    };
+
+    updateTimeRemaining();
+
+    const timer = setInterval(() => {
+      updateTimeRemaining();
     }, 1000);
 
     return () => clearInterval(timer);
@@ -60,8 +78,20 @@ export default function GiveAccessScreen() {
     setIsGenerating(false);
   };
 
-  const remainingMs = expiresAt ? Math.max(0, expiresAt - Date.now()) : 0;
-  const remainingMinutes = remainingMs ? Math.ceil(remainingMs / 60000) : 0;
+  const handleSend = () => {
+    if (!email.trim()) {
+      setHelperText('Add an email before sending access.');
+      return;
+    }
+
+    if (!generatedCode) {
+      setHelperText('Generate an access code before sending access.');
+      return;
+    }
+
+    setHelperText('Invite prepared. Backend delivery will plug into this send action next.');
+    router.replace('/cleaners');
+  };
 
   return (
     <Screen eyebrow="Access" title="Give property access" backHref="/cleaners" backLabel="Back to team">
@@ -75,6 +105,8 @@ export default function GiveAccessScreen() {
             placeholderTextColor={colors.inkMuted}
             keyboardType="email-address"
             autoCapitalize="none"
+            value={email}
+            onChangeText={setEmail}
           />
         </View>
       </View>
@@ -96,9 +128,7 @@ export default function GiveAccessScreen() {
           <Text style={generatedCode ? styles.codeValue : styles.codePlaceholder}>
             {generatedCode || 'A new one-time code will appear here after you generate it.'}
           </Text>
-          {generatedCode && remainingMinutes ? (
-            <Text style={styles.expiryText}>Expires in about {remainingMinutes} minute{remainingMinutes === 1 ? '' : 's'}.</Text>
-          ) : null}
+          {generatedCode && timeRemainingLabel ? <Text style={styles.expiryText}>{timeRemainingLabel}</Text> : null}
           {helperText ? <Text style={styles.helperText}>{helperText}</Text> : null}
         </View>
       </View>
@@ -110,7 +140,7 @@ export default function GiveAccessScreen() {
         </Text>
       </View>
 
-      <Pressable style={styles.sendButton}>
+      <Pressable style={styles.sendButton} onPress={handleSend}>
         <Text style={styles.sendLabel}>Send</Text>
       </Pressable>
     </Screen>

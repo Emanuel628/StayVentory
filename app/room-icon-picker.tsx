@@ -7,10 +7,15 @@ import { roomOptions } from '@/src/data/roomOptions';
 import { colors, iconTile, radius, space, type } from '@/src/theme/theme';
 
 export default function RoomIconPickerScreen() {
-  const params = useLocalSearchParams<{ selectedIcon?: string }>();
+  const params = useLocalSearchParams<{ selectedIcon?: string; houseId?: string }>();
+  const houseId = params.houseId ?? 'linden-house';
 
   return (
-    <Screen eyebrow="Room icons" title="Choose room icon" backHref="/add-room" backLabel="Back to room">
+    <Screen
+      eyebrow="Room icons"
+      title="Choose room icon"
+      backHref={{ pathname: '/add-room', params: { houseId, selectedIcon: params.selectedIcon } }}
+      backLabel="Back to room">
       <View style={styles.section}>
         <SectionTitle>Available room types</SectionTitle>
         <Text style={styles.helpText}>
@@ -23,7 +28,7 @@ export default function RoomIconPickerScreen() {
             return (
               <Link
                 key={option.id}
-                href={{ pathname: '/add-room', params: { selectedIcon: option.id } }}
+                href={{ pathname: '/add-room', params: { selectedIcon: option.id, houseId } }}
                 asChild>
                 <Pressable
                   style={StyleSheet.flatten([

@@ -3,7 +3,6 @@ import { Plus, ShieldCheck } from 'lucide-react-native';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { ListRowLink } from '@/src/components/ListRowLink';
-import { QuantityDots } from '@/src/components/QuantityDots';
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
 import { getHouseById, getRoomsByHouseId } from '@/src/data/mock';
@@ -25,7 +24,7 @@ export default function HouseDetailScreen() {
       <View style={styles.section}>
         <View style={styles.rowBetween}>
           <SectionTitle>Rooms</SectionTitle>
-          <Link href="/add-room" asChild>
+          <Link href={{ pathname: '/add-room', params: { houseId: house.id } }} asChild>
             <Pressable style={styles.inlineAction}>
               <Plus color={colors.teal} size={14} strokeWidth={1.75} />
               <Text style={styles.inlineActionLabel}>Add room</Text>
@@ -59,11 +58,8 @@ export default function HouseDetailScreen() {
               iconColor={tileOnDark}
               name={room.name}
               meta={room.meta}
-              status={room.status}>
-              <View style={styles.quantityWrap}>
-                <QuantityDots current={room.current} required={room.required} />
-              </View>
-            </ListRowLink>
+              status={room.status}
+            />
           );
         })}
       </View>
@@ -111,9 +107,6 @@ const styles = StyleSheet.create({
   inlineActionLabel: {
     ...type.buttonLabel,
     color: colors.teal,
-  },
-  quantityWrap: {
-    paddingTop: space.xs,
   },
   noteBlock: {
     backgroundColor: colors.paperRaised,

@@ -46,7 +46,7 @@ export async function signUpWithPassword(input: {
 
 export async function signOut() {
   const supabase = requireSupabase();
-  return supabase.auth.signOut();
+  return supabase.auth.signOut({ scope: 'local' });
 }
 
 export async function requestPasswordReset(email: string) {

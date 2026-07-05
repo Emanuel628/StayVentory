@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { HousePlus } from 'lucide-react-native';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -6,6 +7,8 @@ import { SectionTitle } from '@/src/components/SectionTitle';
 import { colors, radius, space, type } from '@/src/theme/theme';
 
 export default function AddPropertyScreen() {
+  const router = useRouter();
+
   return (
     <Screen eyebrow="Property" title="Add property" backHref="/houses" backLabel="Cancel">
       <View style={styles.section}>
@@ -39,7 +42,7 @@ export default function AddPropertyScreen() {
         </Text>
       </View>
 
-      <Pressable style={styles.saveButton}>
+      <Pressable style={styles.saveButton} onPress={() => router.replace('/houses')}>
         <Text style={styles.saveLabel}>Save</Text>
       </Pressable>
     </Screen>

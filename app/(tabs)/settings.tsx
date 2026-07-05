@@ -19,15 +19,23 @@ const rows: { label: string; href: Href }[] = [
 
 export default function SettingsScreen() {
   const router = useRouter();
-  const { user, role } = useAuth();
+  const { user, role, refreshSession } = useAuth();
 
   const handleSignOut = async () => {
+    let signOutFailed = false;
+
     if (isSupabaseConfigured) {
       try {
         await signOut();
+        await refreshSession();
       } catch {
-        // Fall through to local navigation so the preview flow still works.
+        signOutFailed = true;
       }
+    }
+
+    if (signOutFailed) {
+      Alert.alert('Log out failed', 'The local session could not be cleared. Please try again.');
+      return;
     }
 
     router.replace('/welcome');

@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { Link, useLocalSearchParams } from 'expo-router';
 import { ChevronRight, ImagePlus } from 'lucide-react-native';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -8,12 +9,14 @@ import { roomOptions } from '@/src/data/roomOptions';
 import { colors, radius, space, type } from '@/src/theme/theme';
 
 export default function AddRoomScreen() {
-  const params = useLocalSearchParams<{ selectedIcon?: string }>();
+  const router = useRouter();
+  const params = useLocalSearchParams<{ selectedIcon?: string; houseId?: string }>();
   const selectedRoomOption = roomOptions.find((option) => option.id === params.selectedIcon) ?? null;
   const SelectedIcon = selectedRoomOption?.icon;
+  const houseId = params.houseId ?? 'linden-house';
 
   return (
-    <Screen eyebrow="Room" title="Add room" backHref={{ pathname: '/houses/[id]', params: { id: 'linden-house' } }} backLabel="Back to house">
+    <Screen eyebrow="Room" title="Add room" backHref={{ pathname: '/houses/[id]', params: { id: houseId } }} backLabel="Back to house">
       <View style={styles.section}>
         <SectionTitle>Room details</SectionTitle>
         <View style={styles.formField}>
@@ -37,7 +40,7 @@ export default function AddRoomScreen() {
         <Link
           href={{
             pathname: '/room-icon-picker',
-            params: selectedRoomOption ? { selectedIcon: selectedRoomOption.id } : undefined,
+            params: selectedRoomOption ? { selectedIcon: selectedRoomOption.id, houseId } : { houseId },
           }}
           asChild>
           <Pressable style={styles.inlineRow}>
@@ -65,7 +68,9 @@ export default function AddRoomScreen() {
         </Link>
       </View>
 
-      <Pressable style={styles.saveButton}>
+      <Pressable
+        style={styles.saveButton}
+        onPress={() => router.replace({ pathname: '/houses/[id]', params: { id: houseId } })}>
         <Text style={styles.saveLabel}>Save room</Text>
       </Pressable>
     </Screen>
