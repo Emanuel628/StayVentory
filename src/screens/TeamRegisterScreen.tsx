@@ -7,7 +7,7 @@ import { AuthField } from '@/src/components/AuthField';
 import { AuthShell } from '@/src/components/AuthShell';
 import { getPasswordStrength } from '@/src/lib/passwordStrength';
 import { formatRetryAfter, getRateLimitState, recordRateLimitHit } from '@/src/services/rateLimit';
-import { emailExistsForSignup, signUpWithPassword } from '@/src/services/auth';
+import { emailExistsForSignup, signInWithPassword, signUpWithPassword } from '@/src/services/auth';
 import { colors, space, type } from '@/src/theme/theme';
 
 export function TeamRegisterScreen() {
@@ -79,7 +79,14 @@ export function TeamRegisterScreen() {
         return;
       }
 
-      setError('Email confirmation is still enabled in Supabase. Disable Confirm Email in Auth > Providers > Email to continue directly into the app.');
+      const { error: signInError } = await signInWithPassword(normalizedEmail, password);
+
+      if (signInError) {
+        setError(signInError.message);
+        return;
+      }
+
+      router.replace('/');
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : 'Unable to create the account.');
     } finally {
