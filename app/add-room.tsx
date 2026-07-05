@@ -43,8 +43,12 @@ export default function AddRoomScreen() {
           <Pressable style={styles.inlineRow}>
             <View style={styles.inlineLeft}>
               {SelectedIcon ? (
-                <View style={styles.selectedIconTile}>
-                  <SelectedIcon color={colors.tealOnDark} size={18} strokeWidth={1.75} />
+                <View
+                  style={[
+                    styles.selectedIconTile,
+                    { backgroundColor: selectedRoomOption?.tileColor },
+                  ]}>
+                  <SelectedIcon color={selectedRoomOption?.iconColor} size={18} strokeWidth={1.75} />
                 </View>
               ) : (
                 <ImagePlus color={colors.teal} size={16} strokeWidth={1.75} />

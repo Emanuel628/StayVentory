@@ -6,17 +6,6 @@ import { SectionTitle } from '@/src/components/SectionTitle';
 import { roomOptions } from '@/src/data/roomOptions';
 import { colors, iconTile, radius, space, type } from '@/src/theme/theme';
 
-const iconPalettes = [
-  { tile: colors.teal, icon: colors.tealOnDark },
-  { tile: colors.ochre, icon: colors.ochreOnDark },
-  { tile: colors.rust, icon: colors.rustOnDark },
-  { tile: '#6C7A5A', icon: '#EEF2E7' },
-  { tile: '#8B5E3C', icon: '#F6E8DC' },
-  { tile: '#4E6A74', icon: '#E3EEF2' },
-  { tile: '#7D6A91', icon: '#EEE8F4' },
-  { tile: '#A05D5D', icon: '#F7E7E7' },
-];
-
 export default function RoomIconPickerScreen() {
   const params = useLocalSearchParams<{ selectedIcon?: string }>();
 
@@ -28,9 +17,8 @@ export default function RoomIconPickerScreen() {
           Choose the icon that best matches the room. This keeps room pages easy to scan and helps cover more than just the obvious spaces.
         </Text>
         <View style={styles.grid}>
-          {roomOptions.map((option, index) => {
+          {roomOptions.map((option) => {
             const Icon = option.icon;
-            const palette = iconPalettes[index % iconPalettes.length];
             const isSelected = params.selectedIcon === option.id;
             return (
               <Link
@@ -42,8 +30,8 @@ export default function RoomIconPickerScreen() {
                     styles.optionCard,
                     isSelected ? styles.optionCardSelected : null,
                   ])}>
-                  <View style={[styles.iconTileWrap, { backgroundColor: palette.tile }]}>
-                    <Icon color={palette.icon} size={iconTile.iconSize} strokeWidth={iconTile.strokeWidth} />
+                  <View style={[styles.iconTileWrap, { backgroundColor: option.tileColor }]}>
+                    <Icon color={option.iconColor} size={iconTile.iconSize} strokeWidth={iconTile.strokeWidth} />
                   </View>
                   <Text style={styles.optionLabel}>{option.label}</Text>
                   <Text style={styles.optionMeta}>{isSelected ? 'Selected' : 'Tap to use this icon'}</Text>
