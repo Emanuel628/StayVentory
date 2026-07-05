@@ -1,7 +1,8 @@
 import { useRouter } from 'expo-router';
-import { ChevronDown, HousePlus } from 'lucide-react-native';
+import { HousePlus } from 'lucide-react-native';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
@@ -27,7 +28,6 @@ export default function AddPropertyScreen() {
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [postalCode, setPostalCode] = useState('');
-  const [isStatePickerOpen, setIsStatePickerOpen] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -123,12 +123,14 @@ export default function AddPropertyScreen() {
           </View>
           <View style={[styles.formField, styles.stateField]}>
             <Text style={styles.fieldLabel}>State</Text>
-            <Pressable
-              style={styles.selectInput}
-              onPress={() => setIsStatePickerOpen((current) => !current)}>
-              <Text style={state ? styles.selectValue : styles.selectPlaceholder}>{state || 'Select'}</Text>
-              <ChevronDown color={colors.inkMuted} size={16} strokeWidth={1.75} />
-            </Pressable>
+            <View style={styles.pickerWrap}>
+              <Picker selectedValue={state} onValueChange={(value) => setState(String(value))} style={styles.picker}>
+                <Picker.Item label="Select" value="" />
+                {US_STATES.map((abbreviation) => (
+                  <Picker.Item key={abbreviation} label={abbreviation} value={abbreviation} />
+                ))}
+              </Picker>
+            </View>
           </View>
           <View style={[styles.formField, styles.zipField]}>
             <Text style={styles.fieldLabel}>ZIP</Text>
@@ -141,23 +143,6 @@ export default function AddPropertyScreen() {
             />
           </View>
         </View>
-        {isStatePickerOpen ? (
-          <ScrollView style={styles.statePicker} nestedScrollEnabled>
-            {US_STATES.map((abbreviation) => (
-              <Pressable
-                key={abbreviation}
-                style={[styles.stateOption, state === abbreviation ? styles.stateOptionSelected : null]}
-                onPress={() => {
-                  setState(abbreviation);
-                  setIsStatePickerOpen(false);
-                }}>
-                <Text style={[styles.stateOptionLabel, state === abbreviation ? styles.stateOptionLabelSelected : null]}>
-                  {abbreviation}
-                </Text>
-              </Pressable>
-            ))}
-          </ScrollView>
-        ) : null}
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
       </View>
 
@@ -217,49 +202,16 @@ const styles = StyleSheet.create({
     ...type.body,
     color: colors.inkBody,
   },
-  selectInput: {
+  pickerWrap: {
     minHeight: 44,
     borderRadius: radius.control,
     borderWidth: 1,
     borderColor: colors.hairline,
-    paddingHorizontal: space.md,
     backgroundColor: colors.paper,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: space.sm,
   },
-  selectValue: {
-    ...type.body,
+  picker: {
+    minHeight: 44,
     color: colors.inkBody,
-  },
-  selectPlaceholder: {
-    ...type.body,
-    color: colors.inkMuted,
-  },
-  statePicker: {
-    maxHeight: 220,
-    borderWidth: 1,
-    borderColor: colors.hairline,
-    borderRadius: radius.control,
-    backgroundColor: colors.paper,
-  },
-  stateOption: {
-    minHeight: 42,
-    paddingHorizontal: space.md,
-    justifyContent: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: colors.hairline,
-  },
-  stateOptionSelected: {
-    backgroundColor: colors.paperRaised,
-  },
-  stateOptionLabel: {
-    ...type.body,
-    color: colors.ink,
-  },
-  stateOptionLabelSelected: {
-    color: colors.teal,
   },
   noteBlock: {
     backgroundColor: colors.paperRaised,
