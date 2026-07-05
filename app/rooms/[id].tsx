@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from 'expo-router';
 import { ArrowLeft, Camera, CircleAlert, NotebookPen, Plus } from 'lucide-react-native';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { QuantityDots } from '@/src/components/QuantityDots';
 import { Screen } from '@/src/components/Screen';
@@ -36,20 +36,40 @@ export default function RoomDetailScreen() {
           <Text style={styles.formTitle}>Add item to this room</Text>
           <View style={styles.formField}>
             <Text style={styles.fieldLabel}>Title</Text>
-            <Text style={styles.fieldValue}>Toilet brush</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Item title"
+              placeholderTextColor={colors.inkMuted}
+            />
           </View>
           <View style={styles.formField}>
             <Text style={styles.fieldLabel}>Description (optional)</Text>
-            <Text style={styles.fieldValue}>Guest bathroom cleaning tool stored beside the toilet.</Text>
+            <TextInput
+              style={[styles.input, styles.multilineInput]}
+              placeholder="Optional item description"
+              placeholderTextColor={colors.inkMuted}
+              multiline
+              textAlignVertical="top"
+            />
           </View>
           <View style={styles.formGrid}>
             <View style={[styles.formField, styles.gridField]}>
               <Text style={styles.fieldLabel}>Min</Text>
-              <Text style={styles.fieldValue}>1</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="0"
+                placeholderTextColor={colors.inkMuted}
+                keyboardType="numeric"
+              />
             </View>
             <View style={[styles.formField, styles.gridField]}>
               <Text style={styles.fieldLabel}>Max</Text>
-              <Text style={styles.fieldValue}>2</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="0"
+                placeholderTextColor={colors.inkMuted}
+                keyboardType="numeric"
+              />
             </View>
           </View>
         </View>
@@ -155,9 +175,19 @@ const styles = StyleSheet.create({
     ...type.eyebrow,
     color: colors.ink,
   },
-  fieldValue: {
+  input: {
+    minHeight: 44,
+    borderRadius: radius.control,
+    borderWidth: 1,
+    borderColor: colors.hairline,
+    paddingHorizontal: space.md,
+    paddingVertical: space.sm,
+    backgroundColor: colors.paper,
     ...type.body,
     color: colors.inkBody,
+  },
+  multilineInput: {
+    minHeight: 88,
   },
   swipeHint: {
     ...type.bodySmallMuted,

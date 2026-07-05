@@ -1,6 +1,6 @@
 import { Link } from 'expo-router';
 import { HousePlus, Plus, ShieldCheck } from 'lucide-react-native';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
@@ -13,17 +13,39 @@ export default function AddPropertyScreen() {
         <SectionTitle>Property details</SectionTitle>
         <View style={styles.formField}>
           <Text style={styles.fieldLabel}>Property title</Text>
-          <Text style={styles.fieldPlaceholder}>Enter property title</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter property title"
+            placeholderTextColor={colors.inkMuted}
+          />
         </View>
         <View style={styles.formField}>
           <Text style={styles.fieldLabel}>Address</Text>
-          <Text style={styles.fieldPlaceholder}>Address line 1</Text>
-          <Text style={styles.fieldPlaceholder}>Address line 2</Text>
-          <Text style={styles.fieldPlaceholder}>City, State ZIP</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Address line 1"
+            placeholderTextColor={colors.inkMuted}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Address line 2"
+            placeholderTextColor={colors.inkMuted}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="City, State ZIP"
+            placeholderTextColor={colors.inkMuted}
+          />
         </View>
         <View style={styles.formField}>
           <Text style={styles.fieldLabel}>Description (optional)</Text>
-          <Text style={styles.fieldPlaceholder}>Add a short property note</Text>
+          <TextInput
+            style={[styles.input, styles.multilineInput]}
+            placeholder="Add a short property note"
+            placeholderTextColor={colors.inkMuted}
+            multiline
+            textAlignVertical="top"
+          />
         </View>
       </View>
 
@@ -73,13 +95,19 @@ const styles = StyleSheet.create({
     ...type.eyebrow,
     color: colors.ink,
   },
-  fieldValue: {
+  input: {
+    minHeight: 44,
+    borderRadius: radius.control,
+    borderWidth: 1,
+    borderColor: colors.hairline,
+    paddingHorizontal: space.md,
+    paddingVertical: space.sm,
+    backgroundColor: colors.paper,
     ...type.body,
     color: colors.inkBody,
   },
-  fieldPlaceholder: {
-    ...type.body,
-    color: colors.inkMuted,
+  multilineInput: {
+    minHeight: 88,
   },
   inlineRow: {
     paddingVertical: space.lg,
