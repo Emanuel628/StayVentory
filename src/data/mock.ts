@@ -26,8 +26,10 @@ export type InventoryRow = {
   id: string;
   roomId: string;
   name: string;
+  description?: string;
   current: number;
-  required: number;
+  minRequired: number;
+  maxPar: number;
   storage: string;
 };
 
@@ -123,14 +125,83 @@ export const rooms: RoomItem[] = [
 ];
 
 export const inventoryByRoom: InventoryRow[] = [
-  { id: 'tp', roomId: 'primary-bathroom', name: 'Toilet paper', current: 4, required: 6, storage: 'Under sink basket' },
-  { id: 'towels', roomId: 'primary-bathroom', name: 'Bath towels', current: 4, required: 4, storage: 'Upper linen shelf' },
-  { id: 'soap', roomId: 'primary-bathroom', name: 'Hand soap', current: 1, required: 1, storage: 'Vanity drawer' },
-  { id: 'shampoo', roomId: 'primary-bathroom', name: 'Shampoo', current: 1, required: 1, storage: 'Shower ledge' },
-  { id: 'pillows', roomId: 'primary-bedroom', name: 'Pillows', current: 2, required: 2, storage: 'On bed' },
-  { id: 'sheets', roomId: 'primary-bedroom', name: 'Sheet sets', current: 2, required: 2, storage: 'Closet top shelf' },
-  { id: 'coffee-pods', roomId: 'kitchen', name: 'Coffee pods', current: 8, required: 8, storage: 'Pantry left bin' },
-  { id: 'paper-towels', roomId: 'kitchen', name: 'Paper towels', current: 2, required: 2, storage: 'Pantry center shelf' },
+  {
+    id: 'tp',
+    roomId: 'primary-bathroom',
+    name: 'Toilet paper',
+    description: 'Guest-facing backup rolls stored below the sink.',
+    current: 4,
+    minRequired: 6,
+    maxPar: 10,
+    storage: 'Under sink basket',
+  },
+  {
+    id: 'towels',
+    roomId: 'primary-bathroom',
+    name: 'Bath towels',
+    description: 'Folded and stacked on the top linen shelf.',
+    current: 4,
+    minRequired: 4,
+    maxPar: 8,
+    storage: 'Upper linen shelf',
+  },
+  {
+    id: 'soap',
+    roomId: 'primary-bathroom',
+    name: 'Hand soap',
+    current: 1,
+    minRequired: 1,
+    maxPar: 2,
+    storage: 'Vanity drawer',
+  },
+  {
+    id: 'shampoo',
+    roomId: 'primary-bathroom',
+    name: 'Shampoo',
+    description: 'One full-size bottle for guest shower use.',
+    current: 1,
+    minRequired: 1,
+    maxPar: 2,
+    storage: 'Shower ledge',
+  },
+  {
+    id: 'pillows',
+    roomId: 'primary-bedroom',
+    name: 'Pillows',
+    current: 2,
+    minRequired: 2,
+    maxPar: 4,
+    storage: 'On bed',
+  },
+  {
+    id: 'sheets',
+    roomId: 'primary-bedroom',
+    name: 'Sheet sets',
+    description: 'Fresh backup set for same-day turnovers.',
+    current: 2,
+    minRequired: 2,
+    maxPar: 3,
+    storage: 'Closet top shelf',
+  },
+  {
+    id: 'coffee-pods',
+    roomId: 'kitchen',
+    name: 'Coffee pods',
+    description: 'Mixed medium roast guest supply.',
+    current: 8,
+    minRequired: 8,
+    maxPar: 16,
+    storage: 'Pantry left bin',
+  },
+  {
+    id: 'paper-towels',
+    roomId: 'kitchen',
+    name: 'Paper towels',
+    current: 2,
+    minRequired: 2,
+    maxPar: 4,
+    storage: 'Pantry center shelf',
+  },
 ];
 
 export const cleanerAccess: CleanerAccessItem[] = [
