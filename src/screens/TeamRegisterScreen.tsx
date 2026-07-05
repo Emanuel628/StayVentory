@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { CheckSquare2, Square } from 'lucide-react-native';
 
 import { AuthField } from '@/src/components/AuthField';
@@ -67,8 +67,7 @@ export function TeamRegisterScreen() {
         return;
       }
 
-      Alert.alert('Check your email', 'Your account was created. Use the confirmation email to finish signing in.');
-      router.replace('/login');
+      setError('Email confirmation is still enabled in Supabase. Disable Confirm Email in Auth > Providers > Email to continue directly into the app.');
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : 'Unable to create the account.');
     } finally {
@@ -83,12 +82,11 @@ export function TeamRegisterScreen() {
       subtitle="Use this path for field staff who clean, restock, inspect, report issues, and upload proof for assigned properties."
       actions={[{ label: isSubmitting ? 'Creating account...' : 'Create property team account', onPress: handleRegister, primary: true, disabled: isSubmitting }]}
       links={[{ label: 'Sign in', href: '/login' }]}>
-      <AuthField label="Full name" value={fullName} onChangeText={setFullName} placeholder="Maya Brooks" autoCapitalize="words" />
+      <AuthField label="Full name" value={fullName} onChangeText={setFullName} autoCapitalize="words" />
       <AuthField
         label="Email"
         value={email}
         onChangeText={setEmail}
-        placeholder="maya@example.com"
         keyboardType="email-address"
         inputMode="email"
       />

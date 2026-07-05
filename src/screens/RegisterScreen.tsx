@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { CheckSquare2, Square } from 'lucide-react-native';
 
 import { AuthField } from '@/src/components/AuthField';
@@ -64,8 +64,7 @@ export function RegisterScreen() {
         return;
       }
 
-      Alert.alert('Check your email', 'Your account was created. Use the confirmation email to finish signing in.');
-      router.replace('/login');
+      setError('Email confirmation is still enabled in Supabase. Disable Confirm Email in Auth > Providers > Email to continue directly into the app.');
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : 'Unable to create the account.');
     } finally {
@@ -80,12 +79,11 @@ export function RegisterScreen() {
       subtitle="Set up your account first, then add houses, rooms, room standards, and property team access."
       actions={[{ label: isSubmitting ? 'Creating account...' : 'Create account', onPress: handleRegister, primary: true, disabled: isSubmitting }]}
       links={[{ label: 'Sign in', href: '/login' }]}>
-      <AuthField label="Full name" value={fullName} onChangeText={setFullName} placeholder="Emanuel Castro" autoCapitalize="words" />
+      <AuthField label="Full name" value={fullName} onChangeText={setFullName} autoCapitalize="words" />
       <AuthField
         label="Email"
         value={email}
         onChangeText={setEmail}
-        placeholder="owner@stayventory.co"
         keyboardType="email-address"
         inputMode="email"
       />

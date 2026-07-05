@@ -34,7 +34,6 @@ export async function signUpWithPassword(input: {
     email: input.email,
     password: input.password,
     options: {
-      emailRedirectTo: Linking.createURL('/login'),
       data: {
         display_name: input.displayName,
         role: input.role,
