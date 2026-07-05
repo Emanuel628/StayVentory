@@ -312,9 +312,11 @@ export type Database = {
         Row: {
           created_at: string;
           current_quantity: number | null;
+          description: string | null;
           display_order: number;
           id: string;
           inventory_item_id: string;
+          maximum_quantity: number;
           minimum_quantity: number;
           required_for_ready: boolean;
           room_id: string;
@@ -325,9 +327,11 @@ export type Database = {
         Insert: {
           created_at?: string;
           current_quantity?: number | null;
+          description?: string | null;
           display_order?: number;
           id?: string;
           inventory_item_id: string;
+          maximum_quantity?: number;
           minimum_quantity?: number;
           required_for_ready?: boolean;
           room_id: string;
