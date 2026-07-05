@@ -13,29 +13,13 @@ export default function AddPropertyScreen() {
         <SectionTitle>Property details</SectionTitle>
         <View style={styles.formField}>
           <Text style={styles.fieldLabel}>Property title</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter property title"
-            placeholderTextColor={colors.inkMuted}
-          />
+          <TextInput style={styles.input} placeholder="Enter property title" placeholderTextColor={colors.inkMuted} />
         </View>
         <View style={styles.formField}>
           <Text style={styles.fieldLabel}>Address</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Address line 1"
-            placeholderTextColor={colors.inkMuted}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Address line 2"
-            placeholderTextColor={colors.inkMuted}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="City, State ZIP"
-            placeholderTextColor={colors.inkMuted}
-          />
+          <TextInput style={styles.input} placeholder="Address line 1" placeholderTextColor={colors.inkMuted} />
+          <TextInput style={styles.input} placeholder="Address line 2" placeholderTextColor={colors.inkMuted} />
+          <TextInput style={styles.input} placeholder="City, State ZIP" placeholderTextColor={colors.inkMuted} />
         </View>
         <View style={styles.formField}>
           <Text style={styles.fieldLabel}>Description (optional)</Text>
@@ -61,19 +45,27 @@ export default function AddPropertyScreen() {
           </Pressable>
         </Link>
 
-        <View style={styles.inlineRow}>
-          <View style={styles.inlineLeft}>
-            <Plus color={colors.teal} size={16} strokeWidth={1.75} />
-            <Text style={styles.inlineText}>Add room</Text>
-          </View>
-          <Text style={styles.inlineAction}>Open</Text>
-        </View>
+        <Link href="/add-room" asChild>
+          <Pressable style={styles.inlineRow}>
+            <View style={styles.inlineLeft}>
+              <Plus color={colors.teal} size={16} strokeWidth={1.75} />
+              <Text style={styles.inlineText}>Add room</Text>
+            </View>
+            <Text style={styles.inlineAction}>Open</Text>
+          </Pressable>
+        </Link>
       </View>
 
       <View style={styles.noteBlock}>
         <HousePlus color={colors.teal} size={18} strokeWidth={1.75} />
-        <Text style={styles.noteText}>Owners start by adding the property, then build rooms one by one and set room-specific inventory inside each room page.</Text>
+        <Text style={styles.noteText}>
+          Owners start by adding the property, then build rooms one by one and set room-specific inventory inside each room page.
+        </Text>
       </View>
+
+      <Pressable style={styles.saveButton}>
+        <Text style={styles.saveLabel}>Save</Text>
+      </Pressable>
     </Screen>
   );
 }
@@ -141,5 +133,17 @@ const styles = StyleSheet.create({
   noteText: {
     ...type.noteBody,
     color: colors.inkBody,
+  },
+  saveButton: {
+    minHeight: 46,
+    borderRadius: radius.control,
+    backgroundColor: colors.teal,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: space.lg,
+  },
+  saveLabel: {
+    ...type.buttonLabel,
+    color: colors.buttonPrimaryText,
   },
 });

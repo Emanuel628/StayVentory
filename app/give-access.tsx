@@ -1,5 +1,5 @@
 import { KeyRound, Mail, ShieldCheck } from 'lucide-react-native';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
@@ -44,6 +44,10 @@ export default function GiveAccessScreen() {
           Owners generate a new one-time string each time they want to grant access to a property team member.
         </Text>
       </View>
+
+      <Pressable style={styles.sendButton}>
+        <Text style={styles.sendLabel}>Send</Text>
+      </Pressable>
     </Screen>
   );
 }
@@ -123,5 +127,17 @@ const styles = StyleSheet.create({
   noteText: {
     ...type.noteBody,
     color: colors.inkBody,
+  },
+  sendButton: {
+    minHeight: 46,
+    borderRadius: radius.control,
+    backgroundColor: colors.teal,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: space.lg,
+  },
+  sendLabel: {
+    ...type.buttonLabel,
+    color: colors.buttonPrimaryText,
   },
 });
