@@ -77,8 +77,12 @@ function AppShell() {
   const resolvedRole = role ?? (user?.user_metadata.role as 'owner' | 'cleaner' | undefined) ?? null;
   const isPublicPath = publicPaths.has(pathname);
   const isOwnerSession = status === 'authenticated' && resolvedRole !== 'cleaner';
+  const showOwnerPreviewFooter = status === 'unconfigured';
   const showFooter =
-    isOwnerSession && !isPublicPath && pathname !== '/+not-found' && pathname !== '/team-workspace';
+    (isOwnerSession || showOwnerPreviewFooter) &&
+    !isPublicPath &&
+    pathname !== '/+not-found' &&
+    pathname !== '/team-workspace';
 
   useEffect(() => {
     if (!isConfigured || status === 'loading') {

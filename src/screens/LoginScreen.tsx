@@ -4,6 +4,7 @@ import { Text } from 'react-native';
 
 import { AuthField } from '@/src/components/AuthField';
 import { AuthShell } from '@/src/components/AuthShell';
+import { clearRateLimit, formatRetryAfter, getRateLimitState, recordRateLimitHit } from '@/src/services/rateLimit';
 import { signInWithPassword } from '@/src/services/auth';
 import { colors, type } from '@/src/theme/theme';
 
@@ -15,17 +16,29 @@ export function LoginScreen() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSignIn = async () => {
+    const normalizedEmail = email.trim().toLowerCase();
+    const rateLimitKey = `signin:${normalizedEmail || 'anonymous'}`;
+
     try {
       setError('');
       setIsSubmitting(true);
 
-      const { error: authError } = await signInWithPassword(email.trim(), password);
+      const rateLimit = await getRateLimitState(rateLimitKey, { limit: 5, windowMs: 15 * 60 * 1000 });
+
+      if (!rateLimit.allowed) {
+        setError(`Too many sign-in attempts. Try again in ${formatRetryAfter(rateLimit.retryAfterMs)}.`);
+        return;
+      }
+
+      const { error: authError } = await signInWithPassword(normalizedEmail, password);
 
       if (authError) {
+        await recordRateLimitHit(rateLimitKey, { limit: 5, windowMs: 15 * 60 * 1000 });
         setError(authError.message);
         return;
       }
 
+      await clearRateLimit(rateLimitKey);
       router.replace('/');
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : 'Unable to sign in.');

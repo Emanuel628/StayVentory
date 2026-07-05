@@ -3,6 +3,7 @@ import { Text } from 'react-native';
 
 import { AuthField } from '@/src/components/AuthField';
 import { AuthShell } from '@/src/components/AuthShell';
+import { formatRetryAfter, getRateLimitState, recordRateLimitHit } from '@/src/services/rateLimit';
 import { requestPasswordReset } from '@/src/services/auth';
 import { colors, type } from '@/src/theme/theme';
 
@@ -13,18 +14,29 @@ export function ForgotPasswordScreen() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleReset = async () => {
+    const normalizedEmail = email.trim().toLowerCase();
+    const rateLimitKey = `password-reset:${normalizedEmail || 'anonymous'}`;
+
     try {
       setMessage('');
       setError('');
       setIsSubmitting(true);
 
-      const { error: resetError } = await requestPasswordReset(email.trim());
+      const rateLimit = await getRateLimitState(rateLimitKey, { limit: 1, windowMs: 60 * 1000 });
+
+      if (!rateLimit.allowed) {
+        setError(`Please wait ${formatRetryAfter(rateLimit.retryAfterMs)} before sending another reset email.`);
+        return;
+      }
+
+      const { error: resetError } = await requestPasswordReset(normalizedEmail);
 
       if (resetError) {
         setError(resetError.message);
         return;
       }
 
+      await recordRateLimitHit(rateLimitKey, { limit: 1, windowMs: 60 * 1000 });
       setMessage('Reset instructions have been sent if the account exists.');
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : 'Unable to send reset instructions.');

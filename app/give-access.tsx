@@ -1,15 +1,47 @@
 import { KeyRound, Mail, ShieldCheck } from 'lucide-react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
+import { formatRetryAfter, getRateLimitState, recordRateLimitHit } from '@/src/services/rateLimit';
 import { colors, radius, space, type } from '@/src/theme/theme';
 
 export default function GiveAccessScreen() {
   const [generatedCode, setGeneratedCode] = useState('');
+  const [expiresAt, setExpiresAt] = useState<number | null>(null);
+  const [helperText, setHelperText] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
 
-  const handleGenerateCode = () => {
+  useEffect(() => {
+    if (!expiresAt) {
+      return;
+    }
+
+    const timer = setInterval(() => {
+      if (Date.now() >= expiresAt) {
+        setGeneratedCode('');
+        setExpiresAt(null);
+        setHelperText('Code expired. Generate a new one to continue.');
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [expiresAt]);
+
+  const handleGenerateCode = async () => {
+    const rateLimitKey = 'generate-access-code';
+    setHelperText('');
+    setIsGenerating(true);
+
+    const rateLimit = await getRateLimitState(rateLimitKey, { limit: 1, windowMs: 30 * 1000 });
+
+    if (!rateLimit.allowed) {
+      setHelperText(`Please wait ${formatRetryAfter(rateLimit.retryAfterMs)} before generating another code.`);
+      setIsGenerating(false);
+      return;
+    }
+
     const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
     const numbers = Math.floor(1000 + Math.random() * 9000);
     const prefix =
@@ -22,7 +54,14 @@ export default function GiveAccessScreen() {
       letters[Math.floor(Math.random() * letters.length)];
 
     setGeneratedCode(`${prefix}-${numbers}-${suffix}`);
+    setExpiresAt(Date.now() + 15 * 60 * 1000);
+    setHelperText('Code is valid for 15 minutes.');
+    await recordRateLimitHit(rateLimitKey, { limit: 1, windowMs: 30 * 1000 });
+    setIsGenerating(false);
   };
+
+  const remainingMs = expiresAt ? Math.max(0, expiresAt - Date.now()) : 0;
+  const remainingMinutes = remainingMs ? Math.ceil(remainingMs / 60000) : 0;
 
   return (
     <Screen eyebrow="Access" title="Give property access" backHref="/cleaners" backLabel="Back to team">
@@ -48,7 +87,7 @@ export default function GiveAccessScreen() {
             <Text style={styles.actionLabel}>Generate access code</Text>
           </View>
           <Pressable style={styles.generateButton} onPress={handleGenerateCode}>
-            <Text style={styles.generateButtonLabel}>Generate</Text>
+            <Text style={styles.generateButtonLabel}>{isGenerating ? 'Generating...' : 'Generate'}</Text>
           </Pressable>
         </View>
 
@@ -57,6 +96,10 @@ export default function GiveAccessScreen() {
           <Text style={generatedCode ? styles.codeValue : styles.codePlaceholder}>
             {generatedCode || 'A new one-time code will appear here after you generate it.'}
           </Text>
+          {generatedCode && remainingMinutes ? (
+            <Text style={styles.expiryText}>Expires in about {remainingMinutes} minute{remainingMinutes === 1 ? '' : 's'}.</Text>
+          ) : null}
+          {helperText ? <Text style={styles.helperText}>{helperText}</Text> : null}
         </View>
       </View>
 
@@ -151,6 +194,14 @@ const styles = StyleSheet.create({
     ...type.mono,
     color: colors.teal,
     fontSize: 14,
+  },
+  expiryText: {
+    ...type.bodySmallMuted,
+    color: colors.ochre,
+  },
+  helperText: {
+    ...type.bodySmallMuted,
+    color: colors.inkBody,
   },
   noteBlock: {
     backgroundColor: colors.paperRaised,

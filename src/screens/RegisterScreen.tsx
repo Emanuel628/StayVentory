@@ -4,6 +4,7 @@ import { Alert, StyleSheet, Text, View } from 'react-native';
 
 import { AuthField } from '@/src/components/AuthField';
 import { AuthShell } from '@/src/components/AuthShell';
+import { formatRetryAfter, getRateLimitState, recordRateLimitHit } from '@/src/services/rateLimit';
 import { signUpWithPassword } from '@/src/services/auth';
 import { colors, space, type } from '@/src/theme/theme';
 
@@ -17,6 +18,8 @@ export function RegisterScreen() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleRegister = async () => {
+    const normalizedEmail = email.trim().toLowerCase();
+
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
       return;
@@ -26,14 +29,28 @@ export function RegisterScreen() {
       setError('');
       setIsSubmitting(true);
 
+      const rateLimit = await getRateLimitState(`owner-register:${normalizedEmail || 'anonymous'}`, {
+        limit: 3,
+        windowMs: 30 * 60 * 1000,
+      });
+
+      if (!rateLimit.allowed) {
+        setError(`Too many account creation attempts. Try again in ${formatRetryAfter(rateLimit.retryAfterMs)}.`);
+        return;
+      }
+
       const { data, error: authError } = await signUpWithPassword({
-        email: email.trim(),
+        email: normalizedEmail,
         password,
         displayName: fullName.trim(),
         role: 'owner',
       });
 
       if (authError) {
+        await recordRateLimitHit(`owner-register:${normalizedEmail || 'anonymous'}`, {
+          limit: 3,
+          windowMs: 30 * 60 * 1000,
+        });
         setError(authError.message);
         return;
       }
