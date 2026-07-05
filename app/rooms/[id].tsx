@@ -1,20 +1,74 @@
 import { useLocalSearchParams } from 'expo-router';
 import { ArrowLeft, Camera, CircleAlert, NotebookPen, Plus } from 'lucide-react-native';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { QuantityDots } from '@/src/components/QuantityDots';
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
 import { StatusStamp } from '@/src/components/StatusStamp';
-import { getInstructionsByRoomId, getInventoryByRoomId, getIssuesByRoomId, getRoomById } from '@/src/data/mock';
+import {
+  type InventoryRow,
+  getInstructionsByRoomId,
+  getInventoryByRoomId,
+  getIssuesByRoomId,
+  getRoomById,
+} from '@/src/data/mock';
 import { colors, radius, space, type } from '@/src/theme/theme';
+
+function toIntegerText(value: string) {
+  return value.replace(/\D/g, '');
+}
 
 export default function RoomDetailScreen() {
   const params = useLocalSearchParams<{ id: string }>();
   const room = getRoomById(params.id ?? '');
-  const inventory = getInventoryByRoomId(room.id);
   const instructions = getInstructionsByRoomId(room.id);
   const issues = getIssuesByRoomId(room.id);
+  const [inventory, setInventory] = useState<InventoryRow[]>(() => getInventoryByRoomId(room.id));
+  const [isAddingItem, setIsAddingItem] = useState(false);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [minText, setMinText] = useState('');
+  const [maxText, setMaxText] = useState('');
+
+  useEffect(() => {
+    setInventory(getInventoryByRoomId(room.id));
+    setIsAddingItem(false);
+    setTitle('');
+    setDescription('');
+    setMinText('');
+    setMaxText('');
+  }, [room.id]);
+
+  const saveItem = () => {
+    const nextTitle = title.trim();
+    const minRequired = Number.parseInt(minText || '0', 10);
+    const maxPar = Number.parseInt(maxText || '0', 10);
+
+    if (!nextTitle || minRequired <= 0 || maxPar <= 0) {
+      return;
+    }
+
+    setInventory((current) => [
+      ...current,
+      {
+        id: `${room.id}-${Date.now()}`,
+        roomId: room.id,
+        name: nextTitle,
+        description: description.trim() || undefined,
+        current: minRequired,
+        minRequired,
+        maxPar,
+        storage: 'Storage note not added yet',
+      },
+    ]);
+    setTitle('');
+    setDescription('');
+    setMinText('');
+    setMaxText('');
+    setIsAddingItem(false);
+  };
 
   return (
     <Screen
@@ -33,72 +87,101 @@ export default function RoomDetailScreen() {
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <SectionTitle>Inventory</SectionTitle>
-          <View style={styles.inlineAction}>
+          <Pressable style={styles.inlineAction} onPress={() => setIsAddingItem(true)}>
             <Plus color={colors.teal} size={14} strokeWidth={1.75} />
             <Text style={styles.inlineActionLabel}>Add item</Text>
-          </View>
+          </Pressable>
         </View>
-        <View style={styles.formBlock}>
-          <Text style={styles.formTitle}>Add item to this room</Text>
-          <View style={styles.formField}>
-            <Text style={styles.fieldLabel}>Title</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Item title"
-              placeholderTextColor={colors.inkMuted}
-            />
-          </View>
-          <View style={styles.formField}>
-            <Text style={styles.fieldLabel}>Description (optional)</Text>
-            <TextInput
-              style={[styles.input, styles.multilineInput]}
-              placeholder="Optional item description"
-              placeholderTextColor={colors.inkMuted}
-              multiline
-              textAlignVertical="top"
-            />
-          </View>
-          <View style={styles.formGrid}>
-            <View style={[styles.formField, styles.gridField]}>
-              <Text style={styles.fieldLabel}>Min</Text>
+        {isAddingItem ? (
+          <View style={styles.formBlock}>
+            <Text style={styles.formTitle}>Add item to this room</Text>
+            <View style={styles.formField}>
+              <Text style={styles.fieldLabel}>Title</Text>
               <TextInput
                 style={styles.input}
-                placeholder="0"
+                placeholder="Item title"
                 placeholderTextColor={colors.inkMuted}
-                keyboardType="numeric"
+                value={title}
+                onChangeText={setTitle}
               />
             </View>
-            <View style={[styles.formField, styles.gridField]}>
-              <Text style={styles.fieldLabel}>Max</Text>
+            <View style={styles.formField}>
+              <Text style={styles.fieldLabel}>Description (optional)</Text>
               <TextInput
-                style={styles.input}
-                placeholder="0"
+                style={[styles.input, styles.multilineInput]}
+                placeholder="Optional item description"
                 placeholderTextColor={colors.inkMuted}
-                keyboardType="numeric"
+                multiline
+                textAlignVertical="top"
+                value={description}
+                onChangeText={setDescription}
               />
             </View>
-          </View>
-        </View>
-        <Text style={styles.swipeHint}>Swipe left on an item to edit or delete.</Text>
-        {inventory.map((item) => (
-          <View key={item.id} style={styles.inventoryRow}>
-            <View style={styles.inventoryText}>
-              <Text style={styles.body}>{item.name}</Text>
-              {item.description ? <Text style={styles.description}>{item.description}</Text> : null}
-              <Text style={styles.meta}>{item.storage}</Text>
-              <Text style={styles.meta}>
-                Min {item.minRequired} | Max {item.maxPar}
-              </Text>
-            </View>
-            <View style={styles.inventoryRight}>
-              <QuantityDots current={item.current} required={item.minRequired} />
-              <View style={styles.swipeCue}>
-                <Text style={styles.swipeCueText}>Swipe left</Text>
-                <ArrowLeft color={colors.inkMuted} size={14} strokeWidth={1.75} />
+            <View style={styles.formGrid}>
+              <View style={[styles.formField, styles.gridField]}>
+                <Text style={styles.fieldLabel}>Min</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="0"
+                  placeholderTextColor={colors.inkMuted}
+                  keyboardType="number-pad"
+                  inputMode="numeric"
+                  value={minText}
+                  onChangeText={(value) => setMinText(toIntegerText(value))}
+                />
+              </View>
+              <View style={[styles.formField, styles.gridField]}>
+                <Text style={styles.fieldLabel}>Max</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="0"
+                  placeholderTextColor={colors.inkMuted}
+                  keyboardType="number-pad"
+                  inputMode="numeric"
+                  value={maxText}
+                  onChangeText={(value) => setMaxText(toIntegerText(value))}
+                />
               </View>
             </View>
+            <View style={styles.formActions}>
+              <Pressable style={styles.secondaryButton} onPress={() => setIsAddingItem(false)}>
+                <Text style={styles.secondaryButtonLabel}>Cancel</Text>
+              </Pressable>
+              <Pressable style={styles.primaryButton} onPress={saveItem}>
+                <Text style={styles.primaryButtonLabel}>Save item</Text>
+              </Pressable>
+            </View>
           </View>
-        ))}
+        ) : null}
+        {inventory.length ? (
+          <>
+            <Text style={styles.swipeHint}>Swipe left on an item to edit or delete.</Text>
+            {inventory.map((item) => (
+              <View key={item.id} style={styles.inventoryRow}>
+                <View style={styles.inventoryText}>
+                  <Text style={styles.body}>{item.name}</Text>
+                  {item.description ? <Text style={styles.description}>{item.description}</Text> : null}
+                  <Text style={styles.meta}>{item.storage}</Text>
+                  <Text style={styles.meta}>
+                    Min {item.minRequired} | Max {item.maxPar}
+                  </Text>
+                </View>
+                <View style={styles.inventoryRight}>
+                  <QuantityDots current={item.current} required={item.minRequired} />
+                  <View style={styles.swipeCue}>
+                    <Text style={styles.swipeCueText}>Swipe left</Text>
+                    <ArrowLeft color={colors.inkMuted} size={14} strokeWidth={1.75} />
+                  </View>
+                </View>
+              </View>
+            ))}
+          </>
+        ) : (
+          <View style={styles.emptyState}>
+            <Text style={styles.body}>No items added to this room yet.</Text>
+            <Text style={styles.meta}>Tap + Add item to build this room inventory.</Text>
+          </View>
+        )}
       </View>
 
       <View style={styles.section}>
@@ -179,6 +262,11 @@ const styles = StyleSheet.create({
     ...type.body,
     color: colors.ink,
   },
+  formActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: space.sm,
+  },
   formField: {
     backgroundColor: colors.paper,
     borderWidth: 1,
@@ -212,6 +300,12 @@ const styles = StyleSheet.create({
   },
   multilineInput: {
     minHeight: 88,
+  },
+  emptyState: {
+    backgroundColor: colors.paperRaised,
+    borderRadius: radius.control,
+    padding: space.md,
+    gap: space.xs,
   },
   swipeHint: {
     ...type.bodySmallMuted,
@@ -270,5 +364,31 @@ const styles = StyleSheet.create({
     paddingVertical: space.lg,
     borderBottomWidth: 1,
     borderBottomColor: colors.hairline,
+  },
+  secondaryButton: {
+    minHeight: 40,
+    borderRadius: radius.control,
+    borderWidth: 1,
+    borderColor: colors.hairline,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: space.md,
+    backgroundColor: colors.paper,
+  },
+  secondaryButtonLabel: {
+    ...type.buttonLabel,
+    color: colors.ink,
+  },
+  primaryButton: {
+    minHeight: 40,
+    borderRadius: radius.control,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: space.md,
+    backgroundColor: colors.teal,
+  },
+  primaryButtonLabel: {
+    ...type.buttonLabel,
+    color: colors.buttonPrimaryText,
   },
 });
