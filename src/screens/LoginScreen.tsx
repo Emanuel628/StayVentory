@@ -1,10 +1,11 @@
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 import { CheckSquare2, Square } from 'lucide-react-native';
 
 import { AuthField } from '@/src/components/AuthField';
 import { AuthShell } from '@/src/components/AuthShell';
+import { getLastLoginEmail, setLastLoginEmail } from '@/src/services/authPreferences';
 import { clearRateLimit, formatRetryAfter, getRateLimitState, recordRateLimitHit } from '@/src/services/rateLimit';
 import { signInWithPassword } from '@/src/services/auth';
 import { colors, space, type } from '@/src/theme/theme';
@@ -16,6 +17,24 @@ export function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadLastLoginEmail = async () => {
+      const savedEmail = await getLastLoginEmail();
+
+      if (isMounted && savedEmail) {
+        setEmail(savedEmail);
+      }
+    };
+
+    void loadLastLoginEmail();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleSignIn = async () => {
     const normalizedEmail = email.trim().toLowerCase();
@@ -41,6 +60,7 @@ export function LoginScreen() {
       }
 
       await clearRateLimit(rateLimitKey);
+      await setLastLoginEmail(normalizedEmail);
       router.replace('/');
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : 'Unable to sign in.');

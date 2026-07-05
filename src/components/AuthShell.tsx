@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { Href, Link } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { blurActiveWebElement } from '@/src/lib/webFocus';
 import { colors, radius, space, type } from '@/src/theme/theme';
 
 type ActionLink = {
@@ -49,6 +50,9 @@ export function AuthShell({ eyebrow, title, subtitle, children, actions = [], li
                 action.href ? (
                   <Link key={`${String(action.href)}-${action.label}`} href={action.href} asChild>
                     <Pressable
+                      onPress={() => {
+                        blurActiveWebElement();
+                      }}
                       disabled={action.disabled}
                       style={StyleSheet.flatten([
                         styles.button,
@@ -70,7 +74,10 @@ export function AuthShell({ eyebrow, title, subtitle, children, actions = [], li
                   <Pressable
                     key={action.label}
                     disabled={action.disabled}
-                    onPress={action.onPress}
+                    onPress={() => {
+                      blurActiveWebElement();
+                      action.onPress?.();
+                    }}
                     style={StyleSheet.flatten([
                       styles.button,
                       action.primary ? styles.primaryButton : styles.secondaryButton,
@@ -94,7 +101,11 @@ export function AuthShell({ eyebrow, title, subtitle, children, actions = [], li
             <View style={styles.links}>
               {links.map((link) => (
                 <Link key={`${String(link.href)}-${link.label}`} href={link.href} asChild>
-                  <Pressable style={styles.textLink}>
+                  <Pressable
+                    style={styles.textLink}
+                    onPress={() => {
+                      blurActiveWebElement();
+                    }}>
                     <Text style={styles.textLinkLabel}>{link.label}</Text>
                   </Pressable>
                 </Link>

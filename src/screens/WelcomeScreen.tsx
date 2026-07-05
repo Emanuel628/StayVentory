@@ -3,6 +3,7 @@ import { CalendarCheck2, Camera, ClipboardList, House, PackageSearch, UsersRound
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { AuthShell } from '@/src/components/AuthShell';
+import { blurActiveWebElement } from '@/src/lib/webFocus';
 import { colors, radius, space, type } from '@/src/theme/theme';
 
 const features = [
@@ -40,7 +41,11 @@ export function WelcomeScreen() {
       </View>
 
       <Link href="/team-register" asChild>
-        <Pressable style={styles.textLink}>
+        <Pressable
+          style={styles.textLink}
+          onPress={() => {
+            blurActiveWebElement();
+          }}>
           <Text style={styles.textLinkLabel}>Joining as Property Team?</Text>
         </Pressable>
       </Link>
