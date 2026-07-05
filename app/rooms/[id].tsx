@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import { Camera, CircleAlert, MapPin, NotebookPen, PencilLine, Plus, Trash2 } from 'lucide-react-native';
+import { ArrowLeft, Camera, CircleAlert, MapPin, NotebookPen, Plus } from 'lucide-react-native';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { QuantityDots } from '@/src/components/QuantityDots';
@@ -66,15 +66,9 @@ export default function RoomDetailScreen() {
             </View>
             <View style={styles.inventoryRight}>
               <QuantityDots current={item.current} required={item.minRequired} />
-              <View style={styles.swipeActions}>
-                <View style={styles.actionChip}>
-                  <PencilLine color={colors.teal} size={13} strokeWidth={1.75} />
-                  <Text style={styles.actionText}>Edit</Text>
-                </View>
-                <View style={styles.actionChip}>
-                  <Trash2 color={colors.rust} size={13} strokeWidth={1.75} />
-                  <Text style={[styles.actionText, styles.deleteText]}>Delete</Text>
-                </View>
+              <View style={styles.swipeCue}>
+                <Text style={styles.swipeCueText}>Swipe left</Text>
+                <ArrowLeft color={colors.inkMuted} size={14} strokeWidth={1.75} />
               </View>
             </View>
           </View>
@@ -203,27 +197,14 @@ const styles = StyleSheet.create({
     ...type.noteBody,
     color: colors.inkBody,
   },
-  swipeActions: {
-    flexDirection: 'row',
-    gap: space.xs,
-  },
-  actionChip: {
+  swipeCue: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    borderWidth: 1,
-    borderColor: colors.hairline,
-    borderRadius: radius.control,
-    paddingHorizontal: space.sm,
-    paddingVertical: 6,
-    backgroundColor: colors.paper,
+    gap: space.xs,
   },
-  actionText: {
+  swipeCueText: {
     ...type.bodySmallMuted,
-    color: colors.teal,
-  },
-  deleteText: {
-    color: colors.rust,
+    color: colors.inkMuted,
   },
   body: {
     ...type.body,
