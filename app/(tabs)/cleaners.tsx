@@ -1,5 +1,5 @@
 import { CleanerAccessScreen } from '@/src/screens/CleanerAccessScreen';
 
-export default function CleanersRoute() {
+export default function CleanersTabScreen() {
   return <CleanerAccessScreen />;
 }
