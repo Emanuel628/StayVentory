@@ -9,7 +9,7 @@ type FooterItem = {
   label: string;
   href: string;
   matches: string[];
-  renderIcon: (color: string) => React.ReactNode;
+  renderIcon: (color: string, isActive: boolean) => React.ReactNode;
 };
 
 const footerItems: FooterItem[] = [
@@ -29,8 +29,8 @@ const footerItems: FooterItem[] = [
     label: 'Home',
     href: '/',
     matches: ['/'],
-    renderIcon: (color) => (
-      <View style={styles.homeCircle}>
+    renderIcon: (color, isActive) => (
+      <View style={[styles.homeCircle, isActive ? styles.homeCircleActive : styles.homeCircleInactive]}>
         <Svg width={18} height={18} viewBox="0 0 18 18">
           <Rect x="3" y="3" width="12" height="12" rx="1.5" fill={color} />
         </Svg>
@@ -63,13 +63,21 @@ export function AppFooter() {
     <View style={styles.footer}>
       {footerItems.map((item) => {
         const isActive = isActivePath(pathname, item.matches);
-        const iconColor = isActive ? colors.buttonPrimaryText : colors.inkMuted;
+        const isHome = item.label === 'Home';
+        const iconColor = isHome
+          ? isActive
+            ? colors.buttonPrimaryText
+            : colors.teal
+          : isActive
+            ? colors.teal
+            : colors.inkMuted;
         const labelColor = isActive ? colors.teal : colors.inkMuted;
 
         return (
           <Pressable key={item.label} style={styles.item} onPress={() => router.replace(item.href as never)}>
-            {item.renderIcon(iconColor)}
+            <View style={[styles.iconWrap, isActive ? styles.iconWrapActive : null]}>{item.renderIcon(iconColor, isActive)}</View>
             <Text style={[styles.label, { color: labelColor }]}>{item.label}</Text>
+            <View style={[styles.activeBar, isActive ? styles.activeBarVisible : null]} />
           </Pressable>
         );
       })}
@@ -96,6 +104,15 @@ const styles = StyleSheet.create({
     gap: 4,
     minHeight: 72,
   },
+  iconWrap: {
+    minHeight: 48,
+    minWidth: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconWrapActive: {
+    transform: [{ scale: 1.08 }],
+  },
   label: {
     ...type.buttonLabel,
     fontSize: 10,
@@ -106,6 +123,20 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  homeCircleActive: {
+    backgroundColor: colors.teal,
+  },
+  homeCircleInactive: {
+    backgroundColor: colors.paperRaised,
+  },
+  activeBar: {
+    width: 24,
+    height: 3,
+    borderRadius: 999,
+    backgroundColor: 'transparent',
+  },
+  activeBarVisible: {
     backgroundColor: colors.teal,
   },
 });
