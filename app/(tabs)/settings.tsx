@@ -70,6 +70,14 @@ export default function SettingsScreen() {
           <Text style={styles.settingLabel}>{user?.email ?? 'Signed out'}</Text>
           <Text style={styles.profileMeta}>{role ? role.toUpperCase() : 'NO ROLE'}</Text>
         </View>
+        <View style={styles.actionBlock}>
+          <Pressable style={styles.primaryActionButton} onPress={handleSignOut}>
+            <Text style={styles.primaryActionLabel}>Log out</Text>
+          </Pressable>
+          <Pressable style={styles.destructiveActionButton} onPress={handleDeleteAccount}>
+            <Text style={styles.destructiveActionLabel}>Delete account</Text>
+          </Pressable>
+        </View>
         {rows.map((row) => (
           <Link key={row.label} href={row.href} asChild>
             <Pressable style={styles.settingRow}>
@@ -78,12 +86,6 @@ export default function SettingsScreen() {
             </Pressable>
           </Link>
         ))}
-        <Pressable style={styles.settingRow} onPress={handleSignOut}>
-          <Text style={styles.settingLabel}>Log out</Text>
-        </Pressable>
-        <Pressable style={styles.settingRow} onPress={handleDeleteAccount}>
-          <Text style={styles.destructiveLabel}>Delete account</Text>
-        </Pressable>
       </View>
 
       <View style={styles.section}>
@@ -133,6 +135,34 @@ const styles = StyleSheet.create({
   profileMeta: {
     ...type.bodySmallMuted,
     color: colors.inkBody,
+  },
+  actionBlock: {
+    gap: space.sm,
+    paddingBottom: space.sm,
+  },
+  primaryActionButton: {
+    minHeight: 46,
+    borderRadius: 3,
+    backgroundColor: colors.teal,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: space.lg,
+  },
+  primaryActionLabel: {
+    ...type.buttonLabel,
+    color: colors.buttonPrimaryText,
+  },
+  destructiveActionButton: {
+    minHeight: 46,
+    borderRadius: 3,
+    backgroundColor: colors.rust,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: space.lg,
+  },
+  destructiveActionLabel: {
+    ...type.buttonLabel,
+    color: colors.buttonPrimaryText,
   },
   destructiveLabel: {
     ...type.body,
