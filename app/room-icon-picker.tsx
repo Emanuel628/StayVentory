@@ -37,7 +37,11 @@ export default function RoomIconPickerScreen() {
                 key={option.id}
                 href={{ pathname: '/add-room', params: { selectedIcon: option.id } }}
                 asChild>
-                <Pressable style={[styles.optionCard, isSelected ? styles.optionCardSelected : null]}>
+                <Pressable
+                  style={StyleSheet.flatten([
+                    styles.optionCard,
+                    isSelected ? styles.optionCardSelected : null,
+                  ])}>
                   <View style={[styles.iconTileWrap, { backgroundColor: palette.tile }]}>
                     <Icon color={palette.icon} size={iconTile.iconSize} strokeWidth={iconTile.strokeWidth} />
                   </View>
