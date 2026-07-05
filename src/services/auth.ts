@@ -1,3 +1,4 @@
+import * as Linking from 'expo-linking';
 import type { Provider } from '@supabase/supabase-js';
 
 import { getSupabaseClient } from '@/src/lib/supabase/client';
@@ -33,6 +34,7 @@ export async function signUpWithPassword(input: {
     email: input.email,
     password: input.password,
     options: {
+      emailRedirectTo: Linking.createURL('/login'),
       data: {
         display_name: input.displayName,
         role: input.role,
@@ -49,10 +51,17 @@ export async function signOut() {
 
 export async function requestPasswordReset(email: string) {
   const supabase = requireSupabase();
-  return supabase.auth.resetPasswordForEmail(email);
+  return supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: Linking.createURL('/login'),
+  });
 }
 
 export async function signInWithOAuth(provider: Provider) {
   const supabase = requireSupabase();
   return supabase.auth.signInWithOAuth({ provider });
+}
+
+export async function deleteMyAccount() {
+  const supabase = requireSupabase();
+  return supabase.rpc('delete_my_account');
 }

@@ -6,8 +6,11 @@ import { colors, radius, space, type } from '@/src/theme/theme';
 
 type ActionLink = {
   label: string;
-  href: Href;
+  href?: Href;
+  onPress?: () => void;
   primary?: boolean;
+  destructive?: boolean;
+  disabled?: boolean;
 };
 
 type TextLink = {
@@ -43,21 +46,47 @@ export function AuthShell({ eyebrow, title, subtitle, children, actions = [], li
           {actions.length ? (
             <View style={styles.actions}>
               {actions.map((action) => (
-                <Link key={`${String(action.href)}-${action.label}`} href={action.href} asChild>
+                action.href ? (
+                  <Link key={`${String(action.href)}-${action.label}`} href={action.href} asChild>
+                    <Pressable
+                      disabled={action.disabled}
+                      style={StyleSheet.flatten([
+                        styles.button,
+                        action.primary ? styles.primaryButton : styles.secondaryButton,
+                        action.destructive ? styles.destructiveButton : null,
+                        action.disabled ? styles.buttonDisabled : null,
+                      ])}>
+                      <Text
+                        style={StyleSheet.flatten([
+                          styles.buttonLabel,
+                          action.primary ? styles.primaryButtonLabel : styles.secondaryButtonLabel,
+                          action.destructive ? styles.destructiveButtonLabel : null,
+                        ])}>
+                        {action.label}
+                      </Text>
+                    </Pressable>
+                  </Link>
+                ) : (
                   <Pressable
+                    key={action.label}
+                    disabled={action.disabled}
+                    onPress={action.onPress}
                     style={StyleSheet.flatten([
                       styles.button,
                       action.primary ? styles.primaryButton : styles.secondaryButton,
+                      action.destructive ? styles.destructiveButton : null,
+                      action.disabled ? styles.buttonDisabled : null,
                     ])}>
                     <Text
                       style={StyleSheet.flatten([
                         styles.buttonLabel,
                         action.primary ? styles.primaryButtonLabel : styles.secondaryButtonLabel,
+                        action.destructive ? styles.destructiveButtonLabel : null,
                       ])}>
                       {action.label}
                     </Text>
                   </Pressable>
-                </Link>
+                )
               ))}
             </View>
           ) : null}
@@ -139,6 +168,13 @@ const styles = StyleSheet.create({
     borderColor: colors.ink,
     backgroundColor: 'transparent',
   },
+  destructiveButton: {
+    backgroundColor: colors.rust,
+    borderColor: colors.rust,
+  },
+  buttonDisabled: {
+    opacity: 0.5,
+  },
   buttonLabel: {
     ...type.buttonLabel,
   },
@@ -147,6 +183,9 @@ const styles = StyleSheet.create({
   },
   secondaryButtonLabel: {
     color: colors.ink,
+  },
+  destructiveButtonLabel: {
+    color: colors.buttonPrimaryText,
   },
   textLink: {
     paddingVertical: 2,

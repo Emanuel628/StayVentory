@@ -8,13 +8,13 @@ import {
   IBMPlexSans_500Medium,
   useFonts as useSansFonts,
 } from '@expo-google-fonts/ibm-plex-sans';
-import { Stack } from 'expo-router';
+import { Stack, usePathname, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { Platform } from 'react-native';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
-import { AuthProvider } from '@/src/providers/AuthProvider';
+import { AuthProvider, useAuth } from '@/src/providers/AuthProvider';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -63,23 +63,55 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <AuthProvider>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="welcome" />
-        <Stack.Screen name="login" />
-        <Stack.Screen name="register" />
-        <Stack.Screen name="forgot-password" />
-        <Stack.Screen name="team-register" />
-        <Stack.Screen name="team-workspace" />
-        <Stack.Screen name="add-property" />
-        <Stack.Screen name="add-room" />
-        <Stack.Screen name="room-icon-picker" />
-        <Stack.Screen name="give-access" />
-        <Stack.Screen name="houses/[id]" />
-        <Stack.Screen name="rooms/[id]" />
-        <Stack.Screen name="cleaners" />
-        <Stack.Screen name="+not-found" />
-      </Stack>
+      <AppShell />
     </AuthProvider>
+  );
+}
+
+function AppShell() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const { status, isConfigured } = useAuth();
+
+  useEffect(() => {
+    if (!isConfigured || status === 'loading') {
+      return;
+    }
+
+    const publicPaths = new Set(['/welcome', '/login', '/register', '/forgot-password', '/team-register']);
+    const isPublicPath = publicPaths.has(pathname);
+
+    if (status === 'signed_out' && !isPublicPath) {
+      router.replace('/welcome');
+      return;
+    }
+
+    if (status === 'authenticated' && isPublicPath) {
+      router.replace('/');
+    }
+  }, [isConfigured, pathname, router, status]);
+
+  if (isConfigured && status === 'loading') {
+    return null;
+  }
+
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="welcome" />
+      <Stack.Screen name="login" />
+      <Stack.Screen name="register" />
+      <Stack.Screen name="forgot-password" />
+      <Stack.Screen name="team-register" />
+      <Stack.Screen name="team-workspace" />
+      <Stack.Screen name="add-property" />
+      <Stack.Screen name="add-room" />
+      <Stack.Screen name="room-icon-picker" />
+      <Stack.Screen name="give-access" />
+      <Stack.Screen name="houses/[id]" />
+      <Stack.Screen name="rooms/[id]" />
+      <Stack.Screen name="cleaners" />
+      <Stack.Screen name="+not-found" />
+    </Stack>
   );
 }

@@ -1,9 +1,11 @@
-import { Href, Link } from 'expo-router';
+import { Href, Link, useRouter } from 'expo-router';
 import { ChevronRight } from 'lucide-react-native';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
+import { useAuth } from '@/src/providers/AuthProvider';
+import { deleteMyAccount, signOut } from '@/src/services/auth';
 import { colors, space, type } from '@/src/theme/theme';
 
 const rows: { label: string; href: Href }[] = [
@@ -28,10 +30,46 @@ const previewRows: { label: string; href: Href }[] = [
 ];
 
 export default function SettingsScreen() {
+  const router = useRouter();
+  const { user, role } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.replace('/welcome');
+  };
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      'Delete account',
+      'This will permanently delete the account and its related records. This action cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete account',
+          style: 'destructive',
+          onPress: async () => {
+            const { error } = await deleteMyAccount();
+
+            if (error) {
+              Alert.alert('Delete failed', error.message);
+              return;
+            }
+
+            router.replace('/welcome');
+          },
+        },
+      ],
+    );
+  };
+
   return (
     <Screen eyebrow="Settings" title="System controls">
       <View style={styles.section}>
         <SectionTitle>Account</SectionTitle>
+        <View style={styles.profileBlock}>
+          <Text style={styles.settingLabel}>{user?.email ?? 'Signed out'}</Text>
+          <Text style={styles.profileMeta}>{role ? role.toUpperCase() : 'NO ROLE'}</Text>
+        </View>
         {rows.map((row) => (
           <Link key={row.label} href={row.href} asChild>
             <Pressable style={styles.settingRow}>
@@ -40,6 +78,12 @@ export default function SettingsScreen() {
             </Pressable>
           </Link>
         ))}
+        <Pressable style={styles.settingRow} onPress={handleSignOut}>
+          <Text style={styles.settingLabel}>Log out</Text>
+        </Pressable>
+        <Pressable style={styles.settingRow} onPress={handleDeleteAccount}>
+          <Text style={styles.destructiveLabel}>Delete account</Text>
+        </Pressable>
       </View>
 
       <View style={styles.section}>
@@ -81,6 +125,18 @@ const styles = StyleSheet.create({
   settingLabel: {
     ...type.body,
     color: colors.ink,
+  },
+  profileBlock: {
+    gap: space.xs,
+    paddingBottom: space.sm,
+  },
+  profileMeta: {
+    ...type.bodySmallMuted,
+    color: colors.inkBody,
+  },
+  destructiveLabel: {
+    ...type.body,
+    color: colors.rust,
   },
   helpText: {
     ...type.noteBody,

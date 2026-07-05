@@ -64,6 +64,7 @@ Wired now:
 - starter auth service
 - starter houses service
 - initial SQL schema and RLS
+- account deletion RPC migration
 
 Not wired yet:
 
