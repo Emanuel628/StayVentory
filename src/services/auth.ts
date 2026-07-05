@@ -29,12 +29,20 @@ export async function ensureMyProfile(input: {
 }) {
   const supabase = requireSupabase() as any;
 
-  return supabase.rpc('ensure_my_profile', {
-    profile_role: input.role,
-    profile_email: input.email ?? null,
-    profile_display_name: input.displayName ?? null,
-    profile_username: input.username ?? null,
-  });
+  return supabase
+    .from('profiles')
+    .upsert(
+      {
+        id: (await supabase.auth.getUser()).data.user?.id,
+        email: input.email ?? null,
+        username: input.username ?? null,
+        display_name: input.displayName ?? null,
+        role: input.role,
+      },
+      { onConflict: 'id' },
+    )
+    .select()
+    .single();
 }
 
 export async function emailExistsForSignup(email: string) {
