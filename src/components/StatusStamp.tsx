@@ -35,8 +35,8 @@ export function StatusStamp({ status }: Props) {
         />
       </Svg>
       <View style={styles.labelBlock}>
-        <Text style={[type.stampLabel, { color }]}>{line1}</Text>
-        <Text style={[type.stampLabel, { color }]}>{line2}</Text>
+        <Text style={[styles.labelText, type.stampLabel, { color }]}>{line1}</Text>
+        <Text style={[styles.labelText, type.stampLabel, { color }]}>{line2}</Text>
       </View>
     </View>
   );
@@ -49,7 +49,13 @@ const styles = StyleSheet.create({
     flexShrink: 0,
   },
   labelBlock: {
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 6,
+    gap: 1,
+  },
+  labelText: {
+    textAlign: 'center',
   },
 });

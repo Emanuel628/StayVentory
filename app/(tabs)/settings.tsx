@@ -73,7 +73,7 @@ export default function SettingsScreen() {
   };
 
   return (
-    <Screen eyebrow="Settings" title="System controls">
+    <Screen eyebrow="Settings" title="Account and access">
       <View style={styles.section}>
         <SectionTitle>Account</SectionTitle>
         <View style={styles.profileBlock}>
@@ -91,19 +91,23 @@ export default function SettingsScreen() {
       </View>
 
       <View style={styles.section}>
-        <SectionTitle>Manage</SectionTitle>
+        <SectionTitle>Property team access</SectionTitle>
         <Link href="/cleaners" asChild>
           <Pressable style={styles.settingRow}>
-            <Text style={styles.settingLabel}>Property team access</Text>
+            <View style={styles.settingTextBlock}>
+              <Text style={styles.settingLabel}>Manage access</Text>
+              <Text style={styles.settingMeta}>Invite team members and control which properties they can update.</Text>
+            </View>
             <ChevronRight color={colors.inkMuted} size={18} strokeWidth={1.75} />
           </Pressable>
         </Link>
       </View>
 
       <View style={styles.section}>
-        <SectionTitle>Design lock</SectionTitle>
+        <SectionTitle>What lives elsewhere</SectionTitle>
         <Text style={styles.helpText}>
-          The app stays restrained on purpose: single-column layouts, plain lists, direct labels, and minimal card use.
+          Property setup happens in Houses. Turnovers and proof live in Cleaning. Open repair, maintenance, and
+          replacement items live in Issues. This page stays limited to account and access controls.
         </Text>
       </View>
     </Screen>
@@ -126,6 +130,14 @@ const styles = StyleSheet.create({
   settingLabel: {
     ...type.body,
     color: colors.ink,
+  },
+  settingTextBlock: {
+    flex: 1,
+    gap: 2,
+  },
+  settingMeta: {
+    ...type.bodySmallMuted,
+    color: colors.inkBody,
   },
   profileBlock: {
     gap: space.xs,
