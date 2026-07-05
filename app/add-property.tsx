@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
 import { ChevronDown, HousePlus } from 'lucide-react-native';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Screen } from '@/src/components/Screen';
 import { SectionTitle } from '@/src/components/SectionTitle';
@@ -142,7 +142,7 @@ export default function AddPropertyScreen() {
           </View>
         </View>
         {isStatePickerOpen ? (
-          <View style={styles.statePicker}>
+          <ScrollView style={styles.statePicker} nestedScrollEnabled>
             {US_STATES.map((abbreviation) => (
               <Pressable
                 key={abbreviation}
@@ -156,7 +156,7 @@ export default function AddPropertyScreen() {
                 </Text>
               </Pressable>
             ))}
-          </View>
+          </ScrollView>
         ) : null}
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
       </View>
@@ -238,31 +238,28 @@ const styles = StyleSheet.create({
     color: colors.inkMuted,
   },
   statePicker: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: space.sm,
-  },
-  stateOption: {
-    minWidth: 52,
-    minHeight: 36,
-    borderRadius: radius.control,
+    maxHeight: 220,
     borderWidth: 1,
     borderColor: colors.hairline,
+    borderRadius: radius.control,
     backgroundColor: colors.paper,
-    alignItems: 'center',
+  },
+  stateOption: {
+    minHeight: 42,
+    paddingHorizontal: space.md,
     justifyContent: 'center',
-    paddingHorizontal: space.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.hairline,
   },
   stateOptionSelected: {
-    borderColor: colors.teal,
-    backgroundColor: colors.teal,
+    backgroundColor: colors.paperRaised,
   },
   stateOptionLabel: {
-    ...type.bodySmallMuted,
+    ...type.body,
     color: colors.ink,
   },
   stateOptionLabelSelected: {
-    color: colors.buttonPrimaryText,
+    color: colors.teal,
   },
   noteBlock: {
     backgroundColor: colors.paperRaised,
